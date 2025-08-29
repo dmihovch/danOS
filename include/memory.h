@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdlib.h>
 #define MEMORY_CAP_BYTES 65536 //64KB
 
 
