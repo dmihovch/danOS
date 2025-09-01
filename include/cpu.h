@@ -1,7 +1,14 @@
 #include "memory.h"
 #include "debug.h"
-#define GENERAL_REGISTER_COUNT 8
+#define GENERAL_REGISTER_COUNT 4
 
+/*
+ * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
+ * uint16_t pc: program counter
+ * uint16_t sp: stack pointer
+ *
+ *
+ */
 typedef struct registers_t {
     uint16_t r[GENERAL_REGISTER_COUNT];
     uint16_t pc;
@@ -9,9 +16,8 @@ typedef struct registers_t {
 } registers_t;
 
 /*
- * memory_t* ram: memory array, size defined by MEMORY_CAP_BYTES, array of uint8_t
- * uint16_t pc: program counter
- * uint16_t sp: stack pointer
+ * uint8_t* ram: memory array, size defined by MEMORY_CAP_BYTES
+ *
  *
  * the address of the stack pointer will always point to the next available chunk,
  * so ram[sp] is empty memory, ram[sp - 1] is the last index of the last element on the stack

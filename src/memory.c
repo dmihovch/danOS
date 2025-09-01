@@ -23,8 +23,6 @@ void store(uint8_t* ram, uint16_t adr, uint8_t val){
         printf("store failed!\n");
         exit(1);
     }
-    printf("memory not null\n");
-    print_memory(ram);
     ram[adr] = val;
 
 }
