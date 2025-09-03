@@ -1,0 +1,4 @@
+LOD R0, 15
+LOD R1, 10
+ADD R1, R0
+STR R1, [0xFFFE]

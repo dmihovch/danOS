@@ -1,6 +1,16 @@
 #include "memory.h"
 #include "debug.h"
 #define GENERAL_REGISTER_COUNT 4
+#define PROGRAM_CODE_START_ADDR 0x0000
+#define PROGRAM_CODE_END_ADDR 0x3FFF
+#define DATA_START_ADDR 0x4000
+#define DATA_END_ADDR 0x5FFF
+#define HEAP_START_ADDR 0x6000
+#define HEAP_END_ADDR 0xCFFF
+#define STACK_START_ADDR 0xD000
+#define STACK_END_ADDR 0xFEFF
+#define IO_SPEC_START_ADDR 0xFF00
+#define IO_SPEC_END_ADDR 0xFFFF
 
 /*
  * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
@@ -40,3 +50,5 @@ typedef struct cpu_t {
 
 
 cpu_t* init_cpu();
+
+int load_program(uint8_t*, uint16_t*, uint8_t*, int);
