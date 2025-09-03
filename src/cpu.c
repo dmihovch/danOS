@@ -27,3 +27,18 @@ int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
 
     return 0;
 }
+
+
+
+uint8_t fetch_instruction(uint8_t* ram, uint16_t* pc){
+
+    if(ram == NULL || pc == NULL){
+        //needs to crash
+        printf("ram or pc null in fetch_instruction");
+        exit(1);
+    }
+
+    uint8_t instruction = ram[*pc];
+    (*pc)++;
+    return instruction;
+}

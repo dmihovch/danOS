@@ -41,6 +41,14 @@ typedef struct registers_t {
  * 0xFF00 - 0xFFFF ; I/O special addresses
  *
  */
+
+//might use idk at this point
+typedef struct three_byte_instr_t {
+    uint8_t b1;
+    uint8_t b2;
+    uint8_t b3;
+} three_byte_instr_t;
+
 typedef struct cpu_t {
 
     uint8_t ram[MEMORY_CAP_BYTES];
@@ -58,3 +66,5 @@ cpu_t* init_cpu();
  * p4: int program length
  */
 int load_program(uint8_t*, uint16_t*, uint8_t*, int);
+
+uint8_t fetch_instruction(uint8_t*, uint16_t*);

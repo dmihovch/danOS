@@ -14,6 +14,14 @@ int main(int argc, char** argv){
     load_program(cpu->ram, &cpu->regs.pc, program, 12);
     print_memory_slice(cpu->ram, PROGRAM_CODE_START_ADDR, 32);
     printf("%d\n",cpu->regs.pc);
+
+    uint8_t instr;
+
+    for(int i = 0; i<12; i++){
+        instr = fetch_instruction(cpu->ram,&cpu->regs.pc);
+        printf("0x%x\n",instr);
+    }
+    printf("%d\n",cpu->regs.pc);
     free(cpu);
 
     return 0;
