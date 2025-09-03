@@ -51,4 +51,10 @@ typedef struct cpu_t {
 
 cpu_t* init_cpu();
 
+/*
+ * p1: uint8_t* ram
+ * p2: uint16_t* program counter
+ * p3: uint8_t* program
+ * p4: int program length
+ */
 int load_program(uint8_t*, uint16_t*, uint8_t*, int);
