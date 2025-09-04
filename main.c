@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv){
 
-
+    //this is now out of date, need to change into our new ISA format
     uint8_t program[] = {0x50, 0x00, 0x0F, 0x51, 0x00, 0x0A, 0x19, 0x00, 0x01, 0x65, 0xFF, 0xFE};
 
     cpu_t* cpu = init_cpu();

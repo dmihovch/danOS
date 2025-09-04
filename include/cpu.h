@@ -1,6 +1,6 @@
 #include "memory.h"
 #include "debug.h"
-#define GENERAL_REGISTER_COUNT 4
+#define GENERAL_REGISTER_COUNT 8
 #define PROGRAM_CODE_START_ADDR 0x0000
 #define PROGRAM_CODE_END_ADDR 0x3FFF
 #define DATA_START_ADDR 0x4000

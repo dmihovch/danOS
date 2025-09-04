@@ -1,11 +1,8 @@
 16 bit virtual machine
 
-4 general purpose registers
+8 general purpose registers
 
-3 byte 'instructions'
-
-byte 1: 4 bits opcode, 2 bits mode (immediate value, memory address, single register, double register), 2 bits register
-byte 2 + 3: 16 bits for either value, memory address or register
+4 byte 'instructions'
 
 
 Memory Segmentation:
@@ -19,58 +16,10 @@ Memory Segmentation:
 0xFF00 - 0xFFFF ; I/O / special addresses
 
 
-
-Instruction layout:
-
-Byte 1: 00000 opcode, 00 mode
-
-
-
-Byte 1: 0000|opcode 00|mode 00|register
-Byte 2 + 3: values, addresses, registers
-
-modes:
-    00 - immediate value
-    01 - memory address
-    10 - register id
-    11 - special mode, zero or one operand,
-         if this is the case, byte 2 will
-         contain information on how to handle,
-         and will tell you if another byte was
-         needed to encode all the necessary data
-
-    if mode == 00 || 01 || 10, we grab the next two bytes as normal
-    if mode == 11, we grab the next byte, and
-        if byte 2 mode == 00, no extra memory, no byte 3
-        if byte 2 mode == 01, no extra memory, but take byte 3
-        if byte 2 mode == 10, one operand, take byte 3 and byte 4
-
-byte 2 (special mode):
-    top two bits (most significant bits):
-    00 - zero operands, no extra memory
-    01 - one operand, no extra memory
-    10 - one operand extra memory
-byte 2 (special mode, 3 and 4th most significant bits):
-    00 - immediate value
-    01 - memory address
-    10 - register id
-
-
-
-
+all ints are signed, using twos compliment
 
 
 Instruction set:
-
-all ints are signed, using twos compliment
-
-ADD : 0x1 ; 0001 ; addition
-SUB : 0x2 ; 0010 ; subtraction
-MUL : 0x3 ; 0011 ; multiplaction
-DIV : 0x4 ; 0100 ; division (no floating point, truncate decimal)
-LOD : 0x5 ; 0101 ; load
-STR : 0x6 ; 0110 ; store
-JMP : 0x7 ; 0111 ; jump
 
 
 
@@ -81,17 +30,19 @@ the first operand. it will be a memory address
 
 
 
-
-New instruction layout:
+Instruction Layout:
 
 byte 1:
 
-00000|opcode 000|modifier on opcode
+4 bit opcode category
+4 bit sub-opcode
+this provides us with 16 opcode categories, and 16 specific operations/layouts
+
 
 byte 2:
-
-000|register 00|2nd operand type 0|update flags? 00|addressing mode
+3 bit first operand (which register for most ops, store indicates which type of memory address)
+3 bit second operand type (register, immediate value, memory address, etc)
+2 bit flags (cpu flags, extra instruction, etc)
 
 byte 3+4:
-
-value of operand 2
+contains the 2nd operand
