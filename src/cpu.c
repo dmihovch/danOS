@@ -18,6 +18,7 @@ int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
 
     }
 
+
     uint16_t pc_val = *pc;
 
     for(int i = 0; i<plen; i++){

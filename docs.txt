@@ -22,6 +22,10 @@ Memory Segmentation:
 
 Instruction layout:
 
+Byte 1: 00000 opcode, 00 mode
+
+
+
 Byte 1: 0000|opcode 00|mode 00|register
 Byte 2 + 3: values, addresses, registers
 
@@ -35,15 +39,24 @@ modes:
          and will tell you if another byte was
          needed to encode all the necessary data
 
+    if mode == 00 || 01 || 10, we grab the next two bytes as normal
+    if mode == 11, we grab the next byte, and
+        if byte 2 mode == 00, no extra memory, no byte 3
+        if byte 2 mode == 01, no extra memory, but take byte 3
+        if byte 2 mode == 10, one operand, take byte 3 and byte 4
+
 byte 2 (special mode):
     top two bits (most significant bits):
     00 - zero operands, no extra memory
     01 - one operand, no extra memory
     10 - one operand extra memory
+byte 2 (special mode, 3 and 4th most significant bits):
+    00 - immediate value
+    01 - memory address
+    10 - register id
 
-zero operands
-one operand no extra memory
-one operand extra memory
+
+
 
 
 
@@ -51,10 +64,34 @@ Instruction set:
 
 all ints are signed, using twos compliment
 
-ADD : 0x01 ; 0001 ; addition
-SUB : 0x02 ; 0010 ; subtraction
-MUL : 0x03 ; 0011 ; multiplaction
-DIV : 0x04 ; 0100 ; division (no floating point, truncate decimal)
-LOD : 0x05 ; 0101 ; load
-STR : 0x06 ; 0110 ; store
-JMP : 0x07 ; 0111 ; jump
+ADD : 0x1 ; 0001 ; addition
+SUB : 0x2 ; 0010 ; subtraction
+MUL : 0x3 ; 0011 ; multiplaction
+DIV : 0x4 ; 0100 ; division (no floating point, truncate decimal)
+LOD : 0x5 ; 0101 ; load
+STR : 0x6 ; 0110 ; store
+JMP : 0x7 ; 0111 ; jump
+
+
+
+
+
+store will be the only instruction where a non-register can be
+the first operand. it will be a memory address
+
+
+
+
+New instruction layout:
+
+byte 1:
+
+00000|opcode 000|modifier on opcode
+
+byte 2:
+
+000|register 00|2nd operand type 0|update flags? 00|addressing mode
+
+byte 3+4:
+
+value of operand 2
