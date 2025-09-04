@@ -19,6 +19,34 @@ Memory Segmentation:
 0xFF00 - 0xFFFF ; I/O / special addresses
 
 
+
+Instruction layout:
+
+Byte 1: 0000|opcode 00|mode 00|register
+Byte 2 + 3: values, addresses, registers
+
+modes:
+    00 - immediate value
+    01 - memory address
+    10 - register id
+    11 - special mode, zero or one operand,
+         if this is the case, byte 2 will
+         contain information on how to handle,
+         and will tell you if another byte was
+         needed to encode all the necessary data
+
+byte 2 (special mode):
+    top two bits (most significant bits):
+    00 - zero operands, no extra memory
+    01 - one operand, no extra memory
+    10 - one operand extra memory
+
+zero operands
+one operand no extra memory
+one operand extra memory
+
+
+
 Instruction set:
 
 all ints are signed, using twos compliment

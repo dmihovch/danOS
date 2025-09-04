@@ -1,2 +1,4 @@
 danos
 *.o
+out.txt
+assembler/asm
