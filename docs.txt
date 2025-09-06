@@ -46,3 +46,18 @@ byte 2:
 
 byte 3+4:
 contains the 2nd operand
+
+
+
+
+| Opcode (4b) | Category                                    |
+| ----------- | ------------------------------------------- |
+| 0000        | Data movement (MOV, LOAD, STORE)            |
+| 0001        | Arithmetic (ADD, SUB, MUL, DIV)             |
+| 0010        | Logic (AND, OR, XOR, NOT, SHL, SHR)         |
+| 0011        | Control flow (JMP, JZ, JNZ, CALL, RET, HLT) |
+| 0100        | Stack (PUSH, POP, SP\_INC, SP\_DEC)         |
+| 0101        | System / I/O (IN, OUT, SETF, CLRF)          |
+| 0110        | Comparison / flags (CMP, TEST)              |
+| 0111        | Bit manipulation (ROL, ROR, BITSET, BITCLR) |
+| 1000–1111   | Reserved for future expansion               |
