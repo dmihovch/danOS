@@ -15,13 +15,17 @@ int main(int argc, char** argv){
     print_memory_slice(cpu->ram, PROGRAM_CODE_START_ADDR, 32);
     printf("%d\n",cpu->regs.pc);
 
-    uint8_t instr;
+    uint32_t instr;
 
-    for(int i = 0; i<12; i++){
+    for(int i = 0; i<3; i++){
         instr = fetch_instruction(cpu->ram,&cpu->regs.pc);
-        printf("0x%x\n",instr);
+        uint8_t byte_instr;
+        for(int j = 0; j<4; j++){
+           byte_instr = (instr >> (8*j));
+           printf("0x%x\n",byte_instr);
+        }
     }
-    printf("%d\n",cpu->regs.pc);
+    printf("\n%d\n",cpu->regs.pc);
     free(cpu);
 
     return 0;

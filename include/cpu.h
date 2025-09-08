@@ -67,4 +67,14 @@ cpu_t* init_cpu();
  */
 int load_program(uint8_t*, uint16_t*, uint8_t*, int);
 
-uint8_t fetch_instruction(uint8_t*, uint16_t*);
+
+int fetch_decode_execute_loop();
+
+/*
+ * returns the primary instruction for decoding
+ */
+uint32_t fetch_instruction(uint8_t*, uint16_t*);
+/*
+ *
+ */
+int decode_instruction(uint8_t);

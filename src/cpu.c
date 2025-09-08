@@ -31,7 +31,7 @@ int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
 
 
 
-uint8_t fetch_instruction(uint8_t* ram, uint16_t* pc){
+uint32_t fetch_instruction(uint8_t* ram, uint16_t* pc){
 
     if(ram == NULL || pc == NULL){
         //needs to crash
@@ -39,7 +39,17 @@ uint8_t fetch_instruction(uint8_t* ram, uint16_t* pc){
         exit(1);
     }
 
-    uint8_t instruction = ram[*pc];
-    (*pc)++;
-    return instruction;
+    uint32_t instr_four_byte = 0;
+    for(int i = 0; i<4; i++){
+        uint8_t instr_byte = ram[*pc];
+        (*pc)++;
+        if(!i){
+            instr_four_byte = instr_byte;
+        }
+        if(i) {
+            instr_four_byte <<= 8;
+            instr_four_byte |= instr_byte;
+        }
+    }
+    return instr_four_byte;
 }
