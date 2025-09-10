@@ -1,6 +1,5 @@
 #include "memory.h"
 #include "debug.h"
-#include "operations.h"
 #define GENERAL_REGISTER_COUNT 8
 #define PROGRAM_CODE_START_ADDR 0x0000
 #define PROGRAM_CODE_END_ADDR 0x3FFF
@@ -14,6 +13,24 @@
 #define IO_SPEC_END_ADDR 0xFFFF
 
 
+#define OP_DATA_MOVE 0b0000
+#define OP_ARITH 0b0001
+#define OP_LOGIC 0b0010
+#define OP_COMP 0b0011
+#define OP_BRANCH 0b0100
+#define OP_STACK 0b0101
+#define OP_SYS 0b0110
+
+#define DM_NOP 0b0000
+#define DM_MOV_REG_REG 0b0001
+#define DM_MOV_REG_IMM 0b0010
+#define DM_LOAD_REG_ADDR 0b0011
+#define DM_LOAD_REG_REGOFF 0b0100
+#define DM_STORE_ADDR_REG 0b0101
+#define DM_STORE_REGOFF_REG 0b0110
+#define DM_PUSH_REG 0b0111
+#define DM_POP_REG 0b1000
+#define DM_LEA_REG_ADDR 0b1001
 
 /*
  * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
@@ -27,6 +44,13 @@ typedef struct registers_t {
     uint16_t pc;
     uint16_t sp;
 } registers_t;
+
+
+typedef struct decoded_instr_t{
+    uint8_t opcode;
+    uint8_t reg_type_flag;
+    uint16_t operand;
+} decoded_instr_t;
 
 /*
  * uint8_t* ram: memory array, size defined by MEMORY_CAP_BYTES
@@ -78,3 +102,12 @@ uint32_t fetch_instruction(uint8_t*, uint16_t*);
 decoded_instr_t format_instruction(uint32_t);
 
 int execute_instruction(cpu_t*, decoded_instr_t );
+
+
+int data_movement_ops(cpu_t*, decoded_instr_t);
+int arithmetic_ops(cpu_t*, decoded_instr_t);
+int logic_bitwise_ops(cpu_t*, decoded_instr_t);
+int compare_condition_ops(cpu_t*, decoded_instr_t);
+int branch_controlflow_ops(cpu_t*, decoded_instr_t);
+int stack_ops(cpu_t*, decoded_instr_t);
+int system_ops(cpu_t*, decoded_instr_t);

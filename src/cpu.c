@@ -66,26 +66,48 @@ decoded_instr_t format_instruction(uint32_t instr){
 
 int execute_instruction(cpu_t* cpu, decoded_instr_t instr){
 
-    uint8_t opcode = instr.opcode;
+    uint8_t primary_opcode = instr.opcode >> 4;
 
-    switch(opcode >> 4) {
+    switch(primary_opcode) {
         case OP_DATA_MOVE:
-            data_movement_ops(instr);
+            data_movement_ops(cpu, instr);
         case OP_ARITH:
-            arithmetic_ops(instr);
+            arithmetic_ops(cpu, instr);
         case OP_LOGIC:
-            logic_bitwise_ops(instr);
+            logic_bitwise_ops(cpu, instr);
         case OP_COMP:
-            compare_condition_ops(instr);
+            compare_condition_ops(cpu, instr);
         case OP_BRANCH:
-            branch_controlflow_ops(instr);
+            branch_controlflow_ops(cpu, instr);
         case OP_STACK:
-            stack_ops(instr);
+            stack_ops(cpu, instr);
         case OP_SYS:
-            system_ops(instr);
+            system_ops(cpu, instr);
         default:
             //needs to crash
             printf("Encountered bad opcode: 0x%x\n",instr.opcode >> 4);
+            exit(1);
+    }
+
+}
+
+int data_movement_ops(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t secondary_opcode = instr.opcode >> 4;
+    switch(secondary_opcode){
+        case DM_NOP:
+        case DM_MOV_REG_REG:
+        case DM_MOV_REG_IMM:
+        case DM_LOAD_REG_ADDR:
+        case DM_LOAD_REG_REGOFF:
+        case DM_STORE_ADDR_REG:
+        case DM_STORE_REGOFF_REG:
+        case DM_PUSH_REG:
+        case DM_POP_REG:
+        case DM_LEA_REG_ADDR:
+        default:
+            printf("Bad Secondary Opcode in Data Movement: 0x%x\n",secondary_opcode);
+            //needs to crash
             exit(1);
     }
 
