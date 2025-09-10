@@ -51,7 +51,7 @@ contains the 2nd operand
 
 
 
-
+category 0000 - data movement
 
 0000 0000 – NOP
 0000 0001 – MOV reg, reg

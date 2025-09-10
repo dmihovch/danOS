@@ -53,3 +53,40 @@ uint32_t fetch_instruction(uint8_t* ram, uint16_t* pc){
     }
     return instr_four_byte;
 }
+
+
+decoded_instr_t format_instruction(uint32_t instr){
+    decoded_instr_t di;
+    di.operand = instr;
+    di.reg_type_flag = instr >> 16;
+    di.opcode = instr >> 24;
+    return di;
+}
+
+
+int execute_instruction(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t opcode = instr.opcode;
+
+    switch(opcode >> 4) {
+        case OP_DATA_MOVE:
+            data_movement_ops(instr);
+        case OP_ARITH:
+            arithmetic_ops(instr);
+        case OP_LOGIC:
+            logic_bitwise_ops(instr);
+        case OP_COMP:
+            compare_condition_ops(instr);
+        case OP_BRANCH:
+            branch_controlflow_ops(instr);
+        case OP_STACK:
+            stack_ops(instr);
+        case OP_SYS:
+            system_ops(instr);
+        default:
+            //needs to crash
+            printf("Encountered bad opcode: 0x%x\n",instr.opcode >> 4);
+            exit(1);
+    }
+
+}

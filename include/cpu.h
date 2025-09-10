@@ -1,5 +1,6 @@
 #include "memory.h"
 #include "debug.h"
+#include "operations.h"
 #define GENERAL_REGISTER_COUNT 8
 #define PROGRAM_CODE_START_ADDR 0x0000
 #define PROGRAM_CODE_END_ADDR 0x3FFF
@@ -11,6 +12,8 @@
 #define STACK_END_ADDR 0xFEFF
 #define IO_SPEC_START_ADDR 0xFF00
 #define IO_SPEC_END_ADDR 0xFFFF
+
+
 
 /*
  * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
@@ -42,12 +45,7 @@ typedef struct registers_t {
  *
  */
 
-//might use idk at this point
-typedef struct three_byte_instr_t {
-    uint8_t b1;
-    uint8_t b2;
-    uint8_t b3;
-} three_byte_instr_t;
+
 
 typedef struct cpu_t {
 
@@ -77,4 +75,6 @@ uint32_t fetch_instruction(uint8_t*, uint16_t*);
 /*
  *
  */
-int decode_instruction(uint8_t);
+decoded_instr_t format_instruction(uint32_t);
+
+int execute_instruction(cpu_t*, decoded_instr_t );
