@@ -111,3 +111,6 @@ int compare_condition_ops(cpu_t*, decoded_instr_t);
 int branch_controlflow_ops(cpu_t*, decoded_instr_t);
 int stack_ops(cpu_t*, decoded_instr_t);
 int system_ops(cpu_t*, decoded_instr_t);
+
+
+int subopcode_ops(cpu_t*, decoded_instr_t, int(*)(cpu_t*, decoded_instr_t));

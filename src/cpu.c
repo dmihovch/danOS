@@ -70,13 +70,13 @@ int execute_instruction(cpu_t* cpu, decoded_instr_t instr){
 
     switch(primary_opcode) {
         case OP_DATA_MOVE:
-            data_movement_ops(cpu, instr);
+            subopcode_ops(cpu, instr, data_movement_ops);
         case OP_ARITH:
-            arithmetic_ops(cpu, instr);
+            subopcode_ops(cpu, instr, arithmetic_ops);
         case OP_LOGIC:
-            logic_bitwise_ops(cpu, instr);
+            subopcode_ops(cpu, instr, logic_bitwise_ops);
         case OP_COMP:
-            compare_condition_ops(cpu, instr);
+            subopcode_ops(cpu, instr, compare_condition_ops);
         case OP_BRANCH:
             branch_controlflow_ops(cpu, instr);
         case OP_STACK:
@@ -110,5 +110,9 @@ int data_movement_ops(cpu_t* cpu, decoded_instr_t instr){
             //needs to crash
             exit(1);
     }
+
+}
+
+int subopcode_ops(cpu_t * cpu, decoded_instr_t instr, int (*popcode_func)(cpu_t *cpu, decoded_instr_t instr)){
 
 }
