@@ -1,4 +1,4 @@
-#include "../include/cpu.h"
+#include "../include/ops.h"
 #include <stdint.h>
 
 cpu_t* init_cpu(){
@@ -70,19 +70,19 @@ int execute_instruction(cpu_t* cpu, decoded_instr_t instr){
 
     switch(primary_opcode) {
         case OP_DATA_MOVE:
-            subopcode_ops(cpu, instr, data_movement_ops);
+            return data_movement_ops(cpu, instr);
         case OP_ARITH:
-            subopcode_ops(cpu, instr, arithmetic_ops);
+            return arithmetic_ops(cpu, instr);
         case OP_LOGIC:
-            subopcode_ops(cpu, instr, logic_bitwise_ops);
+            return logic_bitwise_ops(cpu, instr);
         case OP_COMP:
-            subopcode_ops(cpu, instr, compare_condition_ops);
+            return compare_condition_ops(cpu,instr);
         case OP_BRANCH:
-            branch_controlflow_ops(cpu, instr);
+            return branch_controlflow_ops(cpu,instr);
         case OP_STACK:
-            stack_ops(cpu, instr);
+            return stack_ops(cpu,instr);
         case OP_SYS:
-            system_ops(cpu, instr);
+            return system_ops(cpu,instr);
         default:
             //needs to crash
             printf("Encountered bad opcode: 0x%x\n",instr.opcode >> 4);
@@ -93,26 +93,197 @@ int execute_instruction(cpu_t* cpu, decoded_instr_t instr){
 
 int data_movement_ops(cpu_t* cpu, decoded_instr_t instr){
 
-    uint8_t secondary_opcode = instr.opcode >> 4;
-    switch(secondary_opcode){
-        case DM_NOP:
-        case DM_MOV_REG_REG:
-        case DM_MOV_REG_IMM:
-        case DM_LOAD_REG_ADDR:
-        case DM_LOAD_REG_REGOFF:
-        case DM_STORE_ADDR_REG:
-        case DM_STORE_REGOFF_REG:
-        case DM_PUSH_REG:
-        case DM_POP_REG:
-        case DM_LEA_REG_ADDR:
-        default:
-            printf("Bad Secondary Opcode in Data Movement: 0x%x\n",secondary_opcode);
-            //needs to crash
-            exit(1);
-    }
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
 
+    int(*func_arr[16])(cpu_t*, decoded_instr_t) =
+        {nop, mov_reg_reg, mov_reg_imm, load_reg_addr,
+        load_reg_regoff,store_addr_reg, store_regoff_reg, push_reg,
+        pop_reg, lea_reg_addr, NULL, NULL,
+        NULL, NULL, NULL, NULL};
+
+    int(*func)(cpu_t*,decoded_instr_t) = func_arr[secondary_opcode];
+
+    if(func == NULL){
+        //needs to crash
+        printf("Invalid secondary opcode in data_movement_ops: 0x%x\n",secondary_opcode);
+        exit(1);
+    }
+    return func(cpu,instr);
 }
 
-int subopcode_ops(cpu_t * cpu, decoded_instr_t instr, int (*popcode_func)(cpu_t *cpu, decoded_instr_t instr)){
+int arithmetic_ops(cpu_t* cpu, decoded_instr_t instr){
 
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
+
+    int(*func_arr[16])(cpu_t*, decoded_instr_t) =
+            {add_reg_reg,add_reg_imm,sub_reg_reg,sub_reg_imm,
+            mul_reg_reg,mul_reg_imm, div_reg_reg, div_reg_imm,
+            inc_reg, dec_reg, NULL, NULL,
+            NULL, NULL, NULL, NULL};
+
+    int(*func)(cpu_t*,decoded_instr_t) = func_arr[secondary_opcode];
+
+    if(func == NULL){
+        //needs to crash
+        printf("Invalid secondary opcode in arithmetic ops: 0x%x\n",secondary_opcode);
+        exit(1);
+    }
+    return func(cpu,instr);
+
+
+}
+int logic_bitwise_ops(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
+
+    int(*func_arr[16])(cpu_t*, decoded_instr_t) =
+                {and_reg_reg,and_reg_imm,or_reg_reg,or_reg_imm,
+                xor_reg_reg, xor_reg_imm, not_reg, shl_reg_imm,
+                shr_reg_imm, rol_reg_imm, ror_reg_imm, NULL,
+                NULL, NULL, NULL, NULL};
+
+    int(*func)(cpu_t*,decoded_instr_t) = func_arr[secondary_opcode];
+
+    if(func == NULL){
+        //needs to crash
+        printf("Invalid secondary opcode in logical bitwise ops ops: 0x%x\n",secondary_opcode);
+        exit(1);
+    }
+    return func(cpu,instr);
+
+
+}
+int compare_condition_ops(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
+
+    int(*func)(cpu_t*, decoded_instr_t) = NULL;
+    switch(secondary_opcode){
+        case 0b0000:
+            func = cmp_reg_reg;
+        case 0b0001:
+            func = cmp_reg_imm;
+        case 0b0010:
+            func = test_reg_reg;
+        case 0b0011:
+            func = test_reg_imm;
+        case 0b0100:
+            func = seteq_reg;
+        case 0b0101:
+            func = setne_reg;
+        case 0b0110:
+            func = setgt_reg;
+        case 0b0111:
+            func = setlt_reg;
+        default:
+            printf("Invalid secondary opcode in logical bitwise ops ops: 0x%x\n",secondary_opcode);
+
+    }
+
+    if(func == NULL){
+        //needs to crash
+        exit(1);
+    }
+    return func(cpu,instr);
+}
+int branch_controlflow_ops(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
+
+    int(*func)(cpu_t*, decoded_instr_t) = NULL;
+    switch(secondary_opcode){
+        case 0b0000:
+            func = jmp_addr;
+        case 0b0001:
+            func = jz_addr;
+        case 0b0010:
+            func = jnz_addr;
+        case 0b0011:
+            func = jg_addr;
+        case 0b0100:
+            func = jl_addr;
+        case 0b0101:
+            func = call_addr;
+        case 0b0110:
+            func = ret;
+        case 0b0111:
+            func = loop_reg_addr;
+        default:
+            printf("Invalid secondary opcode in branch controlflow ops: 0x%x\n",secondary_opcode);
+
+    }
+
+    if(func == NULL){
+        //needs to crash
+        exit(1);
+    }
+    return func(cpu,instr);
+}
+
+
+int stack_ops(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
+
+    int(*func)(cpu_t*, decoded_instr_t) = NULL;
+    switch(secondary_opcode){
+        case 0b0000:
+            func = enter_imm;
+        case 0b0001:
+            func = leave;
+        case 0b0010:
+            func = push_imm;
+        case 0b0011:
+            func = popall;
+        case 0b0100:
+            func = NULL;
+        case 0b0101:
+            func = NULL;
+        case 0b0110:
+            func = NULL;
+        case 0b0111:
+            func = NULL;
+        default:
+            printf("Invalid secondary opcode in branch controlflow ops: 0x%x\n",secondary_opcode);
+
+    }
+
+    if(func == NULL){
+        //needs to crash
+        exit(1);
+    }
+    return func(cpu,instr);
+}
+int system_ops(cpu_t* cpu, decoded_instr_t instr){
+
+    uint8_t secondary_opcode = instr.opcode & 0b00001111;
+
+    int(*func)(cpu_t*, decoded_instr_t) = NULL;
+    switch(secondary_opcode){
+        case 0b0000:
+            func = interupt_imm;
+        case 0b0001:
+            func = syscall_reg;
+        case 0b0010:
+            func = halt_op;
+        case 0b0011:
+            func = wait_op;
+        case 0b0100:
+            func = break_op;
+        case 0b0101:
+            func = NULL;
+        case 0b0110:
+            func = NULL;
+        case 0b0111:
+            func = NULL;
+        default:
+            printf("Invalid secondary opcode in system calls ops: 0x%x\n",secondary_opcode);
+
+    }
+
+    if(func == NULL){
+        //needs to crash
+        exit(1);
+    }
+    return func(cpu,instr);
 }

@@ -21,16 +21,6 @@
 #define OP_STACK 0b0101
 #define OP_SYS 0b0110
 
-#define DM_NOP 0b0000
-#define DM_MOV_REG_REG 0b0001
-#define DM_MOV_REG_IMM 0b0010
-#define DM_LOAD_REG_ADDR 0b0011
-#define DM_LOAD_REG_REGOFF 0b0100
-#define DM_STORE_ADDR_REG 0b0101
-#define DM_STORE_REGOFF_REG 0b0110
-#define DM_PUSH_REG 0b0111
-#define DM_POP_REG 0b1000
-#define DM_LEA_REG_ADDR 0b1001
 
 /*
  * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
@@ -112,5 +102,5 @@ int branch_controlflow_ops(cpu_t*, decoded_instr_t);
 int stack_ops(cpu_t*, decoded_instr_t);
 int system_ops(cpu_t*, decoded_instr_t);
 
-
+//deprecated?
 int subopcode_ops(cpu_t*, decoded_instr_t, int(*)(cpu_t*, decoded_instr_t));
