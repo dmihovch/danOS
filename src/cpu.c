@@ -95,17 +95,38 @@ int data_movement_ops(cpu_t* cpu, decoded_instr_t instr){
 
     uint8_t secondary_opcode = instr.opcode & 0b00001111;
 
-    int(*func_arr[16])(cpu_t*, decoded_instr_t) =
-        {nop, mov_reg_reg, mov_reg_imm, load_reg_addr,
-        load_reg_regoff,store_addr_reg, store_regoff_reg, push_reg,
-        pop_reg, lea_reg_addr, NULL, NULL,
-        NULL, NULL, NULL, NULL};
 
-    int(*func)(cpu_t*,decoded_instr_t) = func_arr[secondary_opcode];
+
+    int(*func)(cpu_t*,decoded_instr_t) = NULL;
+
+    switch(secondary_opcode){
+        case 0b0000:
+            func = nop;
+        case 0b0001:
+            func = mov_reg_reg;
+        case 0b0010:
+            func = mov_reg_imm;
+        case 0b0011:
+            func = load_reg_addr;
+        case 0b0100:
+            func = load_reg_regoff;
+        case 0b0101:
+            func = store_addr_reg;
+        case 0b0110:
+            func = store_regoff_reg;
+        case 0b0111:
+            func = push_reg;
+        case 0b1000:
+            func = pop_reg;
+        case 0b1001:
+             func = lea_reg_addr;
+        default:
+            printf("Invalid secondary opcode in datamovement ops: 0x%x\n",secondary_opcode);
+
+    }
 
     if(func == NULL){
         //needs to crash
-        printf("Invalid secondary opcode in data_movement_ops: 0x%x\n",secondary_opcode);
         exit(1);
     }
     return func(cpu,instr);
@@ -115,17 +136,38 @@ int arithmetic_ops(cpu_t* cpu, decoded_instr_t instr){
 
     uint8_t secondary_opcode = instr.opcode & 0b00001111;
 
-    int(*func_arr[16])(cpu_t*, decoded_instr_t) =
-            {add_reg_reg,add_reg_imm,sub_reg_reg,sub_reg_imm,
-            mul_reg_reg,mul_reg_imm, div_reg_reg, div_reg_imm,
-            inc_reg, dec_reg, NULL, NULL,
-            NULL, NULL, NULL, NULL};
 
-    int(*func)(cpu_t*,decoded_instr_t) = func_arr[secondary_opcode];
+    int(*func)(cpu_t*,decoded_instr_t) = NULL;
+
+    switch(secondary_opcode){
+        case 0b0000:
+            func = add_reg_reg;
+        case 0b0001:
+            func = add_reg_imm;
+        case 0b0010:
+            func = sub_reg_reg;
+        case 0b0011:
+            func = sub_reg_imm;
+        case 0b0100:
+            func = mul_reg_reg;
+        case 0b0101:
+            func = mul_reg_imm;
+        case 0b0110:
+            func = div_reg_reg;
+        case 0b0111:
+            func = div_reg_imm;
+        case 0b1000:
+            func = inc_reg;
+        case 0b1001:
+            func = dec_reg;
+        default:
+            printf("Invalid secondary opcode in arthimetic ops: 0x%x\n",secondary_opcode);
+
+    }
+
 
     if(func == NULL){
         //needs to crash
-        printf("Invalid secondary opcode in arithmetic ops: 0x%x\n",secondary_opcode);
         exit(1);
     }
     return func(cpu,instr);
@@ -136,17 +178,32 @@ int logic_bitwise_ops(cpu_t* cpu, decoded_instr_t instr){
 
     uint8_t secondary_opcode = instr.opcode & 0b00001111;
 
-    int(*func_arr[16])(cpu_t*, decoded_instr_t) =
-                {and_reg_reg,and_reg_imm,or_reg_reg,or_reg_imm,
-                xor_reg_reg, xor_reg_imm, not_reg, shl_reg_imm,
-                shr_reg_imm, rol_reg_imm, ror_reg_imm, NULL,
-                NULL, NULL, NULL, NULL};
 
-    int(*func)(cpu_t*,decoded_instr_t) = func_arr[secondary_opcode];
+    int(*func)(cpu_t*,decoded_instr_t) = NULL;
+    switch(secondary_opcode){
+        case 0b0000:
+            func = cmp_reg_reg;
+        case 0b0001:
+            func = cmp_reg_imm;
+        case 0b0010:
+            func = test_reg_reg;
+        case 0b0011:
+            func = test_reg_imm;
+        case 0b0100:
+            func = seteq_reg;
+        case 0b0101:
+            func = setne_reg;
+        case 0b0110:
+            func = setgt_reg;
+        case 0b0111:
+            func = setlt_reg;
+        default:
+            printf("Invalid secondary opcode in logical bitwise ops ops: 0x%x\n",secondary_opcode);
+
+    }
 
     if(func == NULL){
         //needs to crash
-        printf("Invalid secondary opcode in logical bitwise ops ops: 0x%x\n",secondary_opcode);
         exit(1);
     }
     return func(cpu,instr);
