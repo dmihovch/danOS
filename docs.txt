@@ -39,10 +39,10 @@ byte 1:
 this provides us with 16 opcode categories, and 16 specific operations/layouts
 
 
+this needs to be rethought, we already know what the types are
 byte 2:
 3 bit first operand (which register for most ops)
-3 bit second operand type (register, immediate value, memory address, etc)
-2 bit flags (cpu flags, extra instruction, etc)
+5 bits flags/ etc (for now I dont know)
 
 byte 3+4:
 contains the 2nd operand

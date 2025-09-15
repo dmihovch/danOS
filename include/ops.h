@@ -1,5 +1,5 @@
 #include "cpu.h"
-
+#include "utils.h"
 
 //data movement operations
 int nop(cpu_t*, decoded_instr_t);

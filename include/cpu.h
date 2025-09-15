@@ -38,7 +38,7 @@ typedef struct registers_t {
 
 typedef struct decoded_instr_t{
     uint8_t opcode;
-    uint8_t reg_type_flag;
+    uint8_t reg_flags;
     uint16_t operand;
 } decoded_instr_t;
 

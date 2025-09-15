@@ -58,7 +58,7 @@ uint32_t fetch_instruction(uint8_t* ram, uint16_t* pc){
 decoded_instr_t format_instruction(uint32_t instr){
     decoded_instr_t di;
     di.operand = instr;
-    di.reg_type_flag = instr >> 16;
+    di.reg_flags= instr >> 16;
     di.opcode = instr >> 24;
     return di;
 }
