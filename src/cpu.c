@@ -8,6 +8,7 @@ cpu_t* init_cpu(){
     }
     c->regs.pc = PROGRAM_CODE_START_ADDR;
     c->regs.sp = STACK_START_ADDR;
+    c->regs.hp = HEAP_START_ADDR;
     return c;
 }
 

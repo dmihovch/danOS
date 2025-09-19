@@ -31,3 +31,10 @@ int mov_reg_imm(cpu_t * cpu, decoded_instr_t instr){
 
     return 0;
 }
+
+int load_reg_addr(cpu_t * cpu, decoded_instr_t instr){
+
+
+
+
+}

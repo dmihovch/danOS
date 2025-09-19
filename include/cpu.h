@@ -26,6 +26,7 @@
  * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
  * uint16_t pc: program counter
  * uint16_t sp: stack pointer
+ * uint16_t hp: heap pointer
  *
  *
  */
@@ -33,6 +34,7 @@ typedef struct registers_t {
     uint16_t r[GENERAL_REGISTER_COUNT];
     uint16_t pc;
     uint16_t sp;
+    uint16_t hp;
 } registers_t;
 
 
