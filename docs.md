@@ -33,7 +33,8 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 - **General purpose:** R0–R15  
 - **Special:**
   - `PC` — Program counter  
-  - `SP` — Stack pointer  
+  - `SP` — Stack pointer
+  - `HP` - Heap Pointer (bump allocator)
   - `FLAGS` — Status flags
 
 ### FLAGS Register (bitwise)
@@ -56,7 +57,7 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 |--------|----------------|-----------------|------------|
 | 0x00   | NOP            | —               | No operation |
 | 0x01   | MOV            | reg–reg / reg–imm4 | Copy value |
-| 0x02   | LDI            | reg–imm4        | Load small immediate into register |
+| 0x02   | LDI            | reg–imm16        | Load large immediate into register |
 | 0x03   | ADD            | reg–reg / reg–imm4 | Add |
 | 0x04   | SUB            | reg–reg / reg–imm4 | Subtract |
 | 0x05   | MUL            | reg–reg / reg–imm4 | Multiply |
@@ -67,10 +68,10 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 | 0x0A   | NOT            | reg–reg          | Bitwise NOT |
 | 0x0B   | SHL            | reg–imm4         | Shift left |
 | 0x0C   | SHR            | reg–imm4         | Shift right |
-| 0x0D   | LD             | reg–mem          | Load from memory |
-| 0x0E   | ST             | mem–reg          | Store to memory |
-| 0x0F   | CMP            | reg–reg / reg–imm4 | Compare and set FLAGS |
-| 0x10   | JMP            | reg–mem          | Unconditional jump (PC = addr in reg or memory) |
+| 0x0D   | LOAD             | reg–mem          | Load from memory |
+| 0x0E   | STOR             | mem–reg          | Store to memory |
+| 0x0F   | COMP            | reg–reg / reg–imm4 | Compare and set FLAGS |
+| 0x10   | JUMP            | reg–mem          | Unconditional jump (PC = addr in reg or memory) |
 | 0x11   | JZ             | reg–mem          | Jump if zero flag set |
 | 0x12   | JNZ            | reg–mem          | Jump if zero flag clear |
 | 0x13   | JG             | reg–mem          | Jump if greater (S=0 & Z=0) |
@@ -79,7 +80,7 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 | 0x16   | RET            | —                | Return from CALL (pop PC) |
 | 0x17   | PUSH           | reg              | Push register onto stack |
 | 0x18   | POP            | reg              | Pop stack into register |
-| 0x19   | ALLOC          | reg–imm4 / reg–reg | Allocate memory; result in register |
+| 0x19   | MAL          | reg–imm4 / reg–reg | Allocate memory; result in register |
 | 0x1A   | HALT           | —                | Stop execution |
 | 0x1B–0x3F | reserved    | —                | — |
 
