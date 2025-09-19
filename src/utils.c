@@ -2,5 +2,5 @@
 
 uint8_t get_register(uint8_t reg_flags){
 
-        return reg_flags >> 5;
+        return reg_flags >> 4;
 }

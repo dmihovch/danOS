@@ -34,7 +34,9 @@ int mov_reg_imm(cpu_t * cpu, decoded_instr_t instr){
 
 int load_reg_addr(cpu_t * cpu, decoded_instr_t instr){
 
+    printf("[debug] - load_reg_addr\n");
+    uint8_t reg_dest = get_register(instr.reg_flags);
+    cpu->regs.r[reg_dest] = instr.operand;
 
-
-
+    return 0;
 }

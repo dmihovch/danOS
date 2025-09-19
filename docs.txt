@@ -1,6 +1,6 @@
 16 bit virtual machine
 
-8 general purpose registers
+16 general purpose registers
 
 4 byte 'instructions'
 
@@ -41,11 +41,11 @@ this provides us with 16 opcode categories, and 16 specific operations/layouts
 
 this needs to be rethought, we already know what the types are
 byte 2:
-3 bit first operand (which register for most ops)
-5 bits flags/ etc (for now I dont know)
+4 bit first operand (which register for most ops)
+4 bits flags/ etc (for now I dont know)
 
 byte 3+4:
-contains the 2nd operand
+contains the 2nd operand data
 
 
 
@@ -133,4 +133,5 @@ Category 0110 – System / Special
 0110 0010 – HALT
 0110 0011 – WAIT
 0110 0100 – BREAK
-0110 0101–1111 – reserved
+0110 0101 - MAL (allocate memory)
+0110 0110–1111 – reserved

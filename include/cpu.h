@@ -1,6 +1,6 @@
 #include "memory.h"
 #include "debug.h"
-#define GENERAL_REGISTER_COUNT 8
+#define GENERAL_REGISTER_COUNT 16
 #define PROGRAM_CODE_START_ADDR 0x0000
 #define PROGRAM_CODE_END_ADDR 0x3FFF
 #define DATA_START_ADDR 0x4000
@@ -35,6 +35,7 @@ typedef struct registers_t {
     uint16_t pc;
     uint16_t sp;
     uint16_t hp;
+    uint16_t flags;
 } registers_t;
 
 
