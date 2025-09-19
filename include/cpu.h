@@ -38,19 +38,22 @@ typedef struct registers_t {
     uint16_t flags;
 } registers_t;
 
-
-typedef struct decoded_instr_t{
-    uint8_t opcode;
-    uint8_t reg_flags;
-    uint16_t operand;
-} decoded_instr_t;
+/*
+ * opcode_mode: 6 MSB: opcode, 2 LSB: modes
+ * operands: 4 MSB: dest register, 4 LSB: src register or small immediate (4 bits)
+ */
+typedef struct instr_t{
+    uint8_t opcode_mode;
+    uint8_t operands;
+} instr_t;
 
 /*
  * uint8_t* ram: memory array, size defined by MEMORY_CAP_BYTES
  *
  *
- * the address of the stack pointer will always point to the next available chunk,
- * so ram[sp] is empty memory, ram[sp - 1] is the last index of the last element on the stack
+ * Stack Pointer points to the last thing added to the stack, so MEM[SP] == last thing added to stack,
+ * MEM[SP+1] == next available memory space
+ *
  *
  * Memory is segmented in the following way:
  *
@@ -92,18 +95,18 @@ uint32_t fetch_instruction(uint8_t*, uint16_t*);
 /*
  *
  */
-decoded_instr_t format_instruction(uint32_t);
+instr_t format_instruction(uint16_t);
 
-int execute_instruction(cpu_t*, decoded_instr_t );
+int execute_instruction(cpu_t*, instr_t);
 
 
-int data_movement_ops(cpu_t*, decoded_instr_t);
-int arithmetic_ops(cpu_t*, decoded_instr_t);
-int logic_bitwise_ops(cpu_t*, decoded_instr_t);
-int compare_condition_ops(cpu_t*, decoded_instr_t);
-int branch_controlflow_ops(cpu_t*, decoded_instr_t);
-int stack_ops(cpu_t*, decoded_instr_t);
-int system_ops(cpu_t*, decoded_instr_t);
+int data_movement_ops(cpu_t*, instr_t);
+int arithmetic_ops(cpu_t*, instr_t);
+int logic_bitwise_ops(cpu_t*, instr_t);
+int compare_condition_ops(cpu_t*, instr_t);
+int branch_controlflow_ops(cpu_t*, instr_t);
+int stack_ops(cpu_t*, instr_t);
+int system_ops(cpu_t*, instr_t);
 
 //deprecated?
-int subopcode_ops(cpu_t*, decoded_instr_t, int(*)(cpu_t*, decoded_instr_t));
+int subopcode_ops(cpu_t*, instr_t, int(*)(cpu_t*, instr_t));

@@ -1,26 +1,5 @@
 #include "memory.h"
 
-#define PROGRAM {0x50, 0x00, 0x0F, 0x51, 0x00, 0x0A, 0x19, 0x00, 0x01, 0x65, 0xFF, 0xFE}
 
 void print_memory(uint8_t*);
 void print_memory_slice(uint8_t*, uint16_t, uint16_t);
-
-/*
- *
- *  LOD R0, 15
- *  LOD R1, 10
- *  ADD R1, R0
- *  STR R1, [0xFFFE]
- *
- * 0101|00|00 00000000 00001111
- * 0101|00|01 00000000 00001010
- * 0001|10|01 00000000 00000001
- * 0110|01|01 11111111 11111110
- *
- * 0x50 0x00 0x0F
- * 0x51 0x00 0x0A
- * 0x19 0x00 0x01
- * 0x65 0xFF 0xFE
- *
- *
- */
