@@ -2,24 +2,14 @@
 #include "debug.h"
 #define GENERAL_REGISTER_COUNT 16
 #define PROGRAM_CODE_START_ADDR 0x0000
-#define PROGRAM_CODE_END_ADDR 0x3FFF
-#define DATA_START_ADDR 0x4000
-#define DATA_END_ADDR 0x5FFF
-#define HEAP_START_ADDR 0x6000
-#define HEAP_END_ADDR 0xCFFF
-#define STACK_START_ADDR 0xD000
-#define STACK_END_ADDR 0xFEFF
+#define PROGRAM_CODE_END_ADDR 0x4FFF
+#define DATA_START_ADDR 0x5000
+#define DATA_END_ADDR 0x8FFF
+#define STACK_END_ADDR 0x9000 //more of a guide than anything
+#define STACK_START_ADDR 0xFEFF
 #define IO_SPEC_START_ADDR 0xFF00
 #define IO_SPEC_END_ADDR 0xFFFF
 
-
-#define OP_DATA_MOVE 0b0000
-#define OP_ARITH 0b0001
-#define OP_LOGIC 0b0010
-#define OP_COMP 0b0011
-#define OP_BRANCH 0b0100
-#define OP_STACK 0b0101
-#define OP_SYS 0b0110
 
 
 /*
@@ -34,7 +24,6 @@ typedef struct registers_t {
     uint16_t r[GENERAL_REGISTER_COUNT];
     uint16_t pc;
     uint16_t sp;
-    uint16_t hp;
     uint16_t flags;
 } registers_t;
 
@@ -55,13 +44,7 @@ typedef struct instr_t{
  * MEM[SP+1] == next available memory space
  *
  *
- * Memory is segmented in the following way:
- *
- * 0x0000 - 0x3FFF ; Program code
- * 0x4000 - 0x5FFF ; Data/global vars
- * 0x6000 - 0xCFFF ; Heap (starts at 0x6000)
- * 0xD000 - 0xFEFF ; Stack (starts at 0xFEFF)
- * 0xFF00 - 0xFFFF ; I/O special addresses
+
  *
  */
 
@@ -95,18 +78,6 @@ uint32_t fetch_instruction(uint8_t*, uint16_t*);
 /*
  *
  */
-instr_t format_instruction(uint16_t);
+instr_t format_instruction(uint32_t);
 
 int execute_instruction(cpu_t*, instr_t);
-
-
-int data_movement_ops(cpu_t*, instr_t);
-int arithmetic_ops(cpu_t*, instr_t);
-int logic_bitwise_ops(cpu_t*, instr_t);
-int compare_condition_ops(cpu_t*, instr_t);
-int branch_controlflow_ops(cpu_t*, instr_t);
-int stack_ops(cpu_t*, instr_t);
-int system_ops(cpu_t*, instr_t);
-
-//deprecated?
-int subopcode_ops(cpu_t*, instr_t, int(*)(cpu_t*, instr_t));
