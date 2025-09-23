@@ -10,6 +10,8 @@ cpu_t* init_cpu(){
     c->regs.sp = STACK_START_ADDR;
     return c;
 }
+//not for pc, but good for others i guess
+
 
 int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
     if(ram == NULL || program == NULL || pc == NULL){
@@ -20,7 +22,7 @@ int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
 
 
     uint16_t pc_val = *pc;
-
+    //purposely not mutating the value @pc
     for(int i = 0; i<plen; i++){
         ram[pc_val] = program[i];
         pc_val++;
@@ -31,22 +33,31 @@ int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
 
 
 
-uint32_t fetch_instruction(uint8_t* ram, uint16_t* pc){
+uint16_t fetch_instruction(uint8_t* ram, uint16_t* pc){
 
     if(ram == NULL || pc == NULL){
         //needs to crash
         printf("ram or pc null in fetch_instruction");
         exit(1);
     }
-    //need to specify whether we pulled the next two bytes for larger values
-    return 0;
+
+    uint16_t raw_instr;
+    raw_instr = ram[*pc];
+    (*pc)++;
+
+    raw_instr <<= 8;
+    raw_instr |= ram[*pc];
+    (*pc)++;
+
+    return raw_instr;
 }
 
 
-instr_t format_instruction(uint32_t instr){
-    instr_t di;
-
-    return di;
+instr_t format_instruction(uint16_t raw_instr){
+    instr_t instr;
+    instr.opcode_mode = raw_instr >> 8;
+    instr.operands = raw_instr;
+    return instr;
 }
 
 

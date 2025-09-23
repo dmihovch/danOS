@@ -1,7 +1,7 @@
 # 16-bit Toy VM Instruction Set Architecture (ISA)
 
-This document describes the instruction set for a 16-bit toy VM using **6-bit opcodes**.  
-All instructions are **16 bits (2 bytes)**; there are **no extension words**.  
+This document describes the instruction set for a 16-bit toy VM using **6-bit opcodes**.
+All instructions are **16 bits (2 bytes)**; there are **no extension words**.
 Large values must be loaded into registers first before use in operations.
 
 ---
@@ -30,11 +30,10 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 
 ## Registers
 
-- **General purpose:** R0–R15  
+- **General purpose:** R0–R15
 - **Special:**
-  - `PC` — Program counter  
+  - `PC` — Program counter
   - `SP` — Stack pointer
-  - `HP` - Heap Pointer (bump allocator)
   - `FLAGS` — Status flags
 
 ### FLAGS Register (bitwise)
@@ -80,9 +79,8 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 | 0x16   | RET            | —                | Return from CALL (pop PC) |
 | 0x17   | PUSH           | reg              | Push register onto stack |
 | 0x18   | POP            | reg              | Pop stack into register |
-| 0x19   | MAL          | reg–imm4 / reg–reg | Allocate memory; result in register |
-| 0x1A   | HALT           | —                | Stop execution |
-| 0x1B–0x3F | reserved    | —                | — |
+| 0x19   | HALT           | —                | Stop execution |
+| 0x1A–0x3F | reserved    | —                | — |
 
 > Opcodes above 0x19 are reserved for future expansion.
 
@@ -90,18 +88,17 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 
 ## Memory
 
-- Word-addressable, 16-bit words  
-- Address space: 64 KB (0x0000–0xFFFF)  
-- `SP` grows downward: `PUSH` decrements SP, `POP` increments SP  
-- `ALLOC` returns a pointer in a register
+- Word-addressable, 16-bit words
+- Address space: 64 KB (0x0000–0xFFFF)
+- `SP` grows downward: `PUSH` decrements SP, `POP` increments SP
 
 ---
 
 ## Control Flow
 
-- **PC** increments by 1 (instruction word) after each instruction  
-- `CALL` pushes return address on stack; `RET` pops back into PC  
-- Conditional jumps (`JZ`, `JNZ`, `JG`, `JL`) test FLAGS  
+- **PC** increments by 1 (instruction word) after each instruction
+- `CALL` pushes return address on stack; `RET` pops back into PC
+- Conditional jumps (`JZ`, `JNZ`, `JG`, `JL`) test FLAGS
 
 ---
 
@@ -126,7 +123,6 @@ end:
 HALT
 ```
 
-- All instructions are 16-bit words.  
-- Large values are preloaded into registers.  
+- All instructions are 16-bit words.
+- Large values are preloaded into registers.
 - Conditional jumps use FLAGS set by `CMP`.
-

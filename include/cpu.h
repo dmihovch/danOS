@@ -74,10 +74,14 @@ int fetch_decode_execute_loop();
 /*
  * returns the primary instruction for decoding
  */
-uint32_t fetch_instruction(uint8_t*, uint16_t*);
+uint16_t fetch_instruction(uint8_t*, uint16_t*);
 /*
  *
  */
-instr_t format_instruction(uint32_t);
+instr_t format_instruction(uint16_t);
 
 int execute_instruction(cpu_t*, instr_t);
+
+
+
+int pc_inc(uint16_t*);
