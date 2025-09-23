@@ -24,16 +24,25 @@ typedef struct registers_t {
     uint16_t r[GENERAL_REGISTER_COUNT];
     uint16_t pc;
     uint16_t sp;
+    uint16_t sfp;
     uint16_t flags;
 } registers_t;
 
 /*
  * opcode_mode: 6 MSB: opcode, 2 LSB: modes
  * operands: 4 MSB: dest register, 4 LSB: src register or small immediate (4 bits)
+ *
+ * opcode: 6 bits
+ * mode: 2 bits
+ * dest: 4 bits
+ * src_fl (src/flags): 4 bits
+ *
  */
 typedef struct instr_t{
-    uint8_t opcode_mode;
-    uint8_t operands;
+    uint8_t opcode;
+    uint8_t mode;
+    uint8_t dest;
+    uint8_t src_fl;
 } instr_t;
 
 /*
@@ -81,7 +90,3 @@ uint16_t fetch_instruction(uint8_t*, uint16_t*);
 instr_t format_instruction(uint16_t);
 
 int execute_instruction(cpu_t*, instr_t);
-
-
-
-int pc_inc(uint16_t*);

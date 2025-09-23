@@ -18,7 +18,7 @@ int main(int argc, char** argv){
 
     for(int i = 0; i<6; i++){
         instr_t instr = format_instruction(fetch_instruction(cpu->ram, &cpu->regs.pc));
-        printf("0x%x, 0x%x\n", instr.opcode_mode, instr.operands);
+        printf("0x%x, 0x%x\n", instr.opcode + instr.mode, instr.dest + instr.src_fl);
     }
 
 

@@ -8,9 +8,10 @@ cpu_t* init_cpu(){
     }
     c->regs.pc = PROGRAM_CODE_START_ADDR;
     c->regs.sp = STACK_START_ADDR;
+    c->regs.sfp = STACK_START_ADDR;
+    c->regs.flags = 0;
     return c;
 }
-//not for pc, but good for others i guess
 
 
 int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
@@ -26,6 +27,11 @@ int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
     for(int i = 0; i<plen; i++){
         ram[pc_val] = program[i];
         pc_val++;
+        if(pc_val > PROGRAM_CODE_END_ADDR){
+            printf("exceeded program code memory region\n");
+            return 1;
+            //crash?
+        }
     }
 
     return 0;
@@ -55,15 +61,19 @@ uint16_t fetch_instruction(uint8_t* ram, uint16_t* pc){
 
 instr_t format_instruction(uint16_t raw_instr){
     instr_t instr;
-    instr.opcode_mode = raw_instr >> 8;
-    instr.operands = raw_instr;
+    instr.opcode= raw_instr >> 10;
+    instr.mode = (raw_instr >> 8) & 0b00000011;
+    instr.dest = (raw_instr >> 4) & 0b00001111;
+    instr.src_fl = raw_instr & 0b00001111;
     return instr;
 }
 
 
 int execute_instruction(cpu_t* cpu, instr_t instr){
 
+
+
+
+
     return 0;
-
-
 }
