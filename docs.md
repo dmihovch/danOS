@@ -126,3 +126,9 @@ HALT
 - All instructions are 16-bit words.
 - Large values are preloaded into registers.
 - Conditional jumps use FLAGS set by `CMP`.
+
+for register offsets, you just need to compute that offset prior and then
+send the one register to the instruction
+
+
+ints are signed, using 2s compliment
