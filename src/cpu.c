@@ -71,8 +71,63 @@ instr_t format_instruction(uint16_t raw_instr){
 
 int execute_instruction(cpu_t* cpu, instr_t instr){
 
-
-
+    switch(instr.opcode){
+        case 0x00:
+            return 0; //NOP
+        case 0x01:
+            return op_mov(cpu, instr);
+        case 0x02:
+            return op_ldi(cpu, instr);
+        case 0x03:
+            return op_add(cpu,instr);
+        case 0x04:
+            return op_sub(cpu, instr);
+        case 0x05:
+            return op_mul(cpu, instr);
+        case 0x06:
+            return op_div(cpu, instr);
+        case 0x07:
+            return op_and(cpu, instr);
+        case 0x08:
+            return op_or(cpu, instr);
+        case 0x09:
+            return op_xor(cpu, instr);
+        case 0x0A:
+            return op_not(cpu, instr);
+        case 0x0B:
+            return op_shl(cpu, instr);
+        case 0x0C:
+            return op_shr(cpu, instr);
+        case 0x0D:
+            return op_load(cpu, instr);
+        case 0x0E:
+            return op_stor(cpu, instr);
+        case 0x0F:
+            return op_comp(cpu, instr);
+        case 0x10:
+            return op_jump(cpu, instr);
+        case 0x11:
+            return op_jz(cpu, instr);
+        case 0x12:
+            return op_jnz(cpu, instr);
+        case 0x13:
+            return op_jg(cpu, instr);
+        case 0x14:
+            return op_jl(cpu, instr);
+        case 0x15:
+            return op_call(cpu, instr);
+        case 0x16:
+            return op_ret(cpu, instr);
+        case 0x17:
+            return op_push(cpu, instr);
+        case 0x18:
+            return op_pop(cpu, instr);
+        case 0x19:
+            return 1; //halt
+        default:
+            printf("provided opcode not defined in ISA: 0x%x\n", instr.opcode);
+            return 1;
+    }
 
 
     return 0;

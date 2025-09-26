@@ -1,9 +1,7 @@
 #include "../include/ops.h"
 
+int op_mov(cpu_t* cpu, instr_t instr){
 
-int nop(cpu_t* cpu, instr_t instr){
 
-    printf("[debug] - nop\n");
 
-    return 0;
 }
