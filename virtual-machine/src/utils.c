@@ -71,3 +71,22 @@ int update_flags_sub(uint16_t * flag, int16_t dif, int16_t a, int16_t b){
         }
     return 0;
 }
+
+int update_flags_and(uint16_t *flag, int16_t prod, int16_t a, int16_t b){
+
+    if(prod == 0){
+        set_flag_bit(flag,FLAG_ZERO,SET_TRUE);
+    }
+    else{
+        set_flag_bit(flag,FLAG_ZERO,SET_FALSE);
+    }
+    if(prod < 0){
+        set_flag_bit(flag,FLAG_SIGN,SET_TRUE);
+    }
+    else{
+        set_flag_bit(flag,FLAG_SIGN,SET_FALSE);
+    }
+    set_flag_bit(flag,FLAG_CARRY,SET_FALSE);
+    set_flag_bit(flag,FLAG_OVERFLOW, SET_FALSE);
+    return 0;
+}

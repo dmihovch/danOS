@@ -142,11 +142,115 @@ int op_and(cpu_t *cpu, instr_t instr){
         case IMM4:
             src = (uint16_t)instr.src_fl;
         default:
-            //print
+            printf("No valid mode given in op_and: 0x%x\n",instr.mode);
             return 1;
     }
-   //update flags
+    update_flags_logic(&cpu->regs.flags, (int16_t)prod, (int16_t)dest, (int16_t)src);
     prod = dest & src;
+    cpu->regs.r[instr.dest] = prod;
+    return 0;
+}
+
+int op_or(cpu_t * cpu, instr_t instr){
+    uint16_t prod;
+    uint16_t dest;
+    uint16_t src;
+    dest = cpu->regs.r[instr.dest];
+    switch(instr.mode){
+        case REG:
+            src = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            src = (uint16_t)instr.src_fl;
+        default:
+            printf("No valid mode given in op_or: 0x%x\n", instr.mode);
+            return 1;
+    }
+    update_flags_logic(&cpu->regs.flags, (int16_t)prod, (int16_t)dest, (int16_t)src);
+    prod = dest | src;
+    cpu->regs.r[instr.dest] = prod;
+    return 0;
+}
+
+int op_xor(cpu_t *cpu, instr_t instr){
+    uint16_t prod;
+    uint16_t dest;
+    uint16_t src;
+    dest = cpu->regs.r[instr.dest];
+    switch(instr.mode){
+        case REG:
+            src = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            src = (uint16_t)instr.src_fl;
+        default:
+            printf("No valid mode given in op_xor: 0x%x\n",instr.mode);
+            return 1;
+    }
+    update_flags_logic(&cpu->regs.flags, (int16_t)prod, (int16_t)dest, (int16_t)src);
+    prod = dest ^ src;
+    cpu->regs.r[instr.dest] = prod;
+    return 0;
+}
+
+int op_not(cpu_t* cpu, instr_t instr){
+    uint16_t prod = ~(cpu->regs.r[instr.dest]);
+    if(prod == 0){
+        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_FALSE);
+    }
+    if((int16_t)prod < 0){
+        set_flag_bit(&cpu->regs.flags, FLAG_SIGN, SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags, FLAG_SIGN, SET_FALSE);
+    }
+    set_flag_bit(&cpu->regs.flags, FLAG_CARRY, SET_FALSE);
+    set_flag_bit(&cpu->regs.flags, FLAG_OVERFLOW, SET_FALSE);
+    cpu->regs.r[instr.dest] = prod;
+    return 0;
+
+}
+
+int op_shl(cpu_t *cpu, instr_t instr){
+    uint16_t prod= cpu->regs.r[instr.dest];
+    uint16_t bits_sh= instr.src_fl;
+    uint16_t pushed_out = (prod >> (16 - bits_sh)) & 0b0000000000000001;
+    prod <<= bits_sh;
+
+    if(prod == 0){
+        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags,FLAG_ZERO,SET_FALSE);
+    }
+    if((int16_t)prod<0){
+        set_flag_bit(&cpu->regs.flags,FLAG_SIGN,SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags,FLAG_SIGN,SET_FALSE);
+    }
+    if(pushed_out == 1){
+        set_flag_bit(&cpu->regs.flags, FLAG_CARRY,SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags,FLAG_CARRY,SET_FALSE);
+    }
+    if(bits_sh == 1){
+        //if a 1 bit shift, sets overflow flag to the prior MSB
+        set_flag_bit(&cpu->regs.flags, FLAG_OVERFLOW, cpu->regs.r[instr.dest]>>15);
+    }
+    cpu->regs.r[instr.dest] = prod;
+    return 0;
+
+}
+
+int op_shr(cpu_t *cpu, instr_t instr){
+    uint16_t prod = cpu->regs.r[instr.dest];
+    uint16_t bits_sh = instr.src_fl;
+    uint16_t pushed_out = ((prod << (16-bits_sh)) >> 15) & 0b0000000000000001; //yikers
+
+
     cpu->regs.r[instr.dest] = prod;
     return 0;
 }
