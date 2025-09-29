@@ -1,3 +1,10 @@
 #include <stdint.h>
 
+#define FLAG_ZERO 0
+#define FLAG_SIGN 1
+#define FLAG_CARRY 2
+#define FLAG_OVERFLOW 3
+#define SET_TRUE 1
+#define SET_FALSE 0
 uint8_t get_dest_reg(uint8_t);
+int set_flag_bit(uint16_t*, int ,int);

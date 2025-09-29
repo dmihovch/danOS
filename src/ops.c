@@ -48,8 +48,44 @@ int op_ldi(cpu_t * cpu, instr_t instr){
 }
 
 int op_add(cpu_t * cpu, instr_t instr){
+
+    int16_t sum;
+    int16_t a;
+    int16_t b;
     switch(instr.mode){
+        a = cpu->regs.r[instr.dest];
         case REG:
-            cpu->regs.r[instr.dest]+=cpu->regs.r[instr.src_fl];
+            b = cpu->regs.r[instr.src_fl];
+            sum = a + b;
+        case IMM4:
+            b = instr.src_fl;
+            sum = cpu->regs.r[instr.dest]+=(uint16_t)instr.src_fl;
     }
+    if(sum == 0){
+        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_FALSE);
+    }
+    if(sum < 0){
+        set_flag_bit(&cpu->regs.flags, FLAG_SIGN, SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags, FLAG_SIGN, SET_FALSE);
+    }
+    if((uint16_t)sum > 0xFF){
+        set_flag_bit(&cpu->regs.flags, FLAG_CARRY, SET_TRUE);
+    }
+    else {
+        set_flag_bit(&cpu->regs.flags, FLAG_CARRY,SET_FALSE);
+    }
+    if((a>0 && b>0 && sum < 0) || (a<0 && b < 0 && sum>0)){
+        set_flag_bit(&cpu->regs.flags,FLAG_OVERFLOW, SET_TRUE);
+    }
+    else{
+        set_flag_bit(&cpu->regs.flags,FLAG_OVERFLOW,SET_FALSE);
+    }
+
+    cpu->regs.r[instr.dest] = (uint16_t)sum;
+    return 0;
 }
