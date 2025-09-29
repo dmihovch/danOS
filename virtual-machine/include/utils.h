@@ -8,3 +8,5 @@
 #define SET_FALSE 0
 uint8_t get_dest_reg(uint8_t);
 int set_flag_bit(uint16_t*, int ,int);
+int update_flags_add(uint16_t*, int16_t, int16_t, int16_t);
+int update_flags_sub(uint16_t*, int16_t, int16_t, int16_t);

@@ -49,43 +49,104 @@ int op_ldi(cpu_t * cpu, instr_t instr){
 
 int op_add(cpu_t * cpu, instr_t instr){
 
-    int16_t sum;
-    int16_t a;
-    int16_t b;
+    uint16_t sum;
+    uint16_t a;
+    uint16_t b;
+    a = cpu->regs.r[instr.dest];
     switch(instr.mode){
-        a = cpu->regs.r[instr.dest];
         case REG:
             b = cpu->regs.r[instr.src_fl];
-            sum = a + b;
         case IMM4:
-            b = instr.src_fl;
-            sum = cpu->regs.r[instr.dest]+=(uint16_t)instr.src_fl;
-    }
-    if(sum == 0){
-        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_TRUE);
-    }
-    else{
-        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_FALSE);
-    }
-    if(sum < 0){
-        set_flag_bit(&cpu->regs.flags, FLAG_SIGN, SET_TRUE);
-    }
-    else{
-        set_flag_bit(&cpu->regs.flags, FLAG_SIGN, SET_FALSE);
-    }
-    if((uint16_t)sum > 0xFF){
-        set_flag_bit(&cpu->regs.flags, FLAG_CARRY, SET_TRUE);
-    }
-    else {
-        set_flag_bit(&cpu->regs.flags, FLAG_CARRY,SET_FALSE);
-    }
-    if((a>0 && b>0 && sum < 0) || (a<0 && b < 0 && sum>0)){
-        set_flag_bit(&cpu->regs.flags,FLAG_OVERFLOW, SET_TRUE);
-    }
-    else{
-        set_flag_bit(&cpu->regs.flags,FLAG_OVERFLOW,SET_FALSE);
+            b = (uint16_t)instr.src_fl;
+        default:
+            printf("No valid mode given in op_add: 0x%x\n",instr.mode);
+            return 1;
     }
 
-    cpu->regs.r[instr.dest] = (uint16_t)sum;
+    update_flags_add(&cpu->regs.flags,(int16_t)sum, (int16_t)a, (int16_t)b);
+    sum = a + b;
+    cpu->regs.r[instr.dest] = sum;
+    return 0;
+}
+
+int op_sub(cpu_t * cpu, instr_t instr){
+    uint16_t dif;
+    uint16_t a;
+    uint16_t b;
+    a = cpu->regs.r[instr.dest];
+    switch(instr.mode){
+        case REG:
+            b = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            b = (uint16_t)instr.src_fl;
+        default:
+            printf("No valid mode given in op_sub: 0x%x\n",instr.mode);
+            return 1;
+    }
+    update_flags_sub(&cpu->regs.flags, (int16_t)dif, (int16_t)a, (int16_t)b);
+    dif = a - b;
+    cpu->regs.r[instr.dest] = dif;
+    return 0;
+}
+
+int op_mul(cpu_t * cpu, instr_t instr){
+    uint16_t prod;
+    uint16_t a;
+    uint16_t b;
+    a = cpu->regs.r[instr.dest];
+    switch(instr.mode){
+        case REG:
+            b = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            b = (uint16_t)instr.src_fl;
+        default:
+            printf("No valid mode given in op_mul: 0x%x\n",instr.mode);
+            return 1;
+
+    }
+    prod = a*b;
+    cpu->regs.r[instr.dest] = prod;
+
+    return 0;
+}
+
+int op_div(cpu_t * cpu, instr_t instr){
+    uint16_t quo;
+    uint16_t dividend;
+    uint16_t divisor;
+    dividend = cpu->regs.r[instr.dest];
+    switch(instr.mode){
+        case REG:
+            divisor = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            divisor = (uint16_t)instr.src_fl;
+        default:
+            printf("No valid mode given in op_div: 0x%x\n", instr.mode);
+            return 1;
+    }
+
+    quo = (uint16_t)(dividend/divisor);
+    cpu->regs.r[instr.dest] = quo;
+
+    return 0;
+}
+
+int op_and(cpu_t *cpu, instr_t instr){
+    uint16_t prod;
+    uint16_t dest;
+    uint16_t src;
+    dest = cpu->regs.r[instr.dest];
+    switch(instr.mode){
+        case REG:
+            src = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            src = (uint16_t)instr.src_fl;
+        default:
+            //print
+            return 1;
+    }
+   //update flags
+    prod = dest & src;
+    cpu->regs.r[instr.dest] = prod;
     return 0;
 }
