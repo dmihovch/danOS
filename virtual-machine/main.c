@@ -11,7 +11,7 @@ int main(int argc, char** argv){
     }
     store(cpu->ram, 0xFFFF, 0xFA);
 
-    load_program(cpu->ram, &cpu->regs.pc, program, 12);
+    load_program(cpu, program, 12);
     print_memory_slice(cpu->ram, PROGRAM_CODE_START_ADDR, 32);
     printf("%d\n",cpu->regs.pc);
 
@@ -21,6 +21,13 @@ int main(int argc, char** argv){
         printf("0x%x, 0x%x\n", (instr.opcode<<2) | instr.mode, (instr.dest<<4) | instr.src_fl);
     }
 
+    int ret_code = 0;
+    while(!ret_code){
+
+        instr_t instr = format_instruction(fetch_instruction(cpu->ram, &cpu->regs.pc));
+        ret_code = execute_instruction(cpu, instr);
+
+    }
 
     printf("\n%d\n",cpu->regs.pc);
     free(cpu);
