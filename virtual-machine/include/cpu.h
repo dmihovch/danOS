@@ -16,7 +16,9 @@
  * uint16_t* r: general registers (R0, R1, etc), amount defined by GENERAL_REGISTER_COUNT
  * uint16_t pc: program counter
  * uint16_t sp: stack pointer
- * uint16_t hp: heap pointer
+ * uint16_t sfp: stack frame pointer
+ * uint16_t flags: conditional flags
+ * uint16_t psa: program start address
  *
  *
  */
@@ -26,6 +28,7 @@ typedef struct registers_t {
     uint16_t sp;
     uint16_t sfp;
     uint16_t flags;
+    uint16_t psa;
 } registers_t;
 
 /*
@@ -75,7 +78,7 @@ cpu_t* init_cpu();
  * p3: uint8_t* program
  * p4: int program length
  */
-int load_program(uint8_t*, uint16_t*, uint8_t*, int);
+int load_program(cpu_t* cpu, uint8_t*, int);
 
 
 int fetch_decode_execute_loop();

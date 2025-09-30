@@ -14,18 +14,14 @@ cpu_t* init_cpu(){
 }
 
 
-int load_program(uint8_t* ram, uint16_t* pc, uint8_t* program, int plen){
-    if(ram == NULL || program == NULL || pc == NULL){
-        //needs to crash
-        exit(1);
-
-    }
+int load_program(cpu_t* cpu, uint8_t* program, int plen){
 
 
-    uint16_t pc_val = *pc;
+    uint16_t pc_val = cpu->regs.pc;
+    cpu->regs.psa = pc_val;
     //purposely not mutating the value @pc
     for(int i = 0; i<plen; i++){
-        ram[pc_val] = program[i];
+        cpu->ram[pc_val] = program[i];
         pc_val++;
         if(pc_val > PROGRAM_CODE_END_ADDR){
             printf("exceeded program code memory region\n");

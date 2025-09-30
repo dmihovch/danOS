@@ -265,3 +265,98 @@ int op_comp(cpu_t *cpu, instr_t instr){
     update_flags_sub(&cpu->regs.flags, (int16_t)dif, (int16_t)a, (int16_t)b);
     return 0;
 }
+
+int op_jump(cpu_t *cpu, instr_t instr){
+    uint16_t addr;
+    uint16_t offset;
+    switch(instr.mode){
+        case REG:
+            offset = cpu->regs.r[instr.dest];
+        case MEM:
+            offset = cpu->ram[cpu->regs.r[instr.dest]];
+        case LABEL:
+            offset =(instr.dest << 8) + instr.src_fl;
+        default:
+            printf("No valid mode given in op_jump: 0x%x\n",instr.mode);
+            return 1;
+    }
+    addr = cpu->regs.psa + offset;
+    if(addr>PROGRAM_CODE_END_ADDR){
+        printf("op_jump caused program counter to pass program code space: 0x%x\n",addr);
+        return 1;
+    }
+    cpu->regs.pc = addr;
+    return 0;
+}
+
+int op_jg(cpu_t *cpu, instr_t instr){
+    uint16_t flag = cpu->regs.flags;
+    if(!check_flag(flag, FLAG_ZERO) && !check_flag(flag, FLAG_SIGN)){
+        op_jump(cpu,instr);
+    }
+    return 0;
+}
+
+int op_jl(cpu_t *cpu, instr_t instr){
+    uint16_t flag = cpu->regs.flags;
+    if(check_flag(flag,FLAG_SIGN)){
+        op_jump(cpu,instr);
+    }
+    return 0;
+}
+
+int op_jnz(cpu_t *cpu, instr_t instr){
+    uint16_t flag = cpu->regs.flags;
+    if(!check_flag(flag,FLAG_ZERO)){
+        op_jump(cpu, instr);
+    }
+    return 0;
+}
+
+int op_jz(cpu_t *cpu, instr_t instr){
+    uint16_t flag = cpu->regs.flags;
+    if(check_flag(flag, FLAG_ZERO)){
+        op_jump(cpu, instr);
+    }
+    return 0;
+}
+
+int op_push(cpu_t *cpu, instr_t instr){
+    cpu->regs.sp -= 1;
+    cpu->ram[cpu->regs.sp] = cpu->regs.r[instr.dest];
+    if(cpu->regs.sp < STACK_END_ADDR){
+        printf("stack overflowed\n");
+        return 1;
+    }
+    return 0;
+}
+
+int op_pop(cpu_t *cpu, instr_t instr){
+    cpu->regs.r[instr.dest] = cpu->ram[cpu->regs.sp];
+    cpu->regs.sp += 1;
+    if(cpu->regs.sp > STACK_START_ADDR){
+        printf("stack underflowed\n");
+        return 1;
+    }
+    return 0;
+}
+
+int op_call(cpu_t *cpu, instr_t instr){
+    cpu->regs.sp -= 1;
+    cpu->ram[cpu->regs.sp] = cpu->regs.pc;
+    if(cpu->regs.sp < STACK_END_ADDR){
+        printf("stack underflowed in op_call\n");
+        return 1;
+    }
+    return op_jump(cpu,instr);
+}
+
+int op_ret(cpu_t *cpu, instr_t instr){
+    cpu->regs.pc = cpu->ram[cpu->regs.sp];
+    cpu->regs.sp += 1;
+    if(cpu->regs.sp > STACK_START_ADDR){
+        printf("stack underflowed in op_ret\n");
+        return 1;
+    }
+    return 0;
+}

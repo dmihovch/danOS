@@ -1,14 +1,11 @@
 #include "../include/utils.h"
 #include "../include/ops.h"
-uint8_t get_dest_reg(uint8_t operands){
-    return 0;
-}
 
 int set_flag_bit(uint16_t* reg, int flag, int val){
-    if(SET_TRUE){
+    if(val == SET_TRUE){
        *reg |= (1 << flag);
     }
-    if(SET_FALSE){
+    if(val == SET_FALSE){
         *reg &= ~(1 << flag);
     }
     return 0;
@@ -106,4 +103,8 @@ int update_flags_bitshift(uint16_t *flag, uint16_t prod, uint16_t bits_sh, uint1
     set_flag_bit(flag, FLAG_SIGN, prod>>15);
     set_flag_bit(flag, FLAG_CARRY, pushed_out);
     return 0;
+}
+
+int check_flag(uint16_t flag, uint16_t bit){
+    return (flag >> bit) & 0b0000000000000001;
 }
