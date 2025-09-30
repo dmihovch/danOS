@@ -213,33 +213,14 @@ int op_not(cpu_t* cpu, instr_t instr){
 }
 
 int op_shl(cpu_t *cpu, instr_t instr){
+
     uint16_t prod= cpu->regs.r[instr.dest];
+    uint16_t orig_val = prod;
     uint16_t bits_sh= instr.src_fl;
     uint16_t pushed_out = (prod >> (16 - bits_sh)) & 0b0000000000000001;
     prod <<= bits_sh;
+    update_flags_bitshift(&cpu->regs.flags, prod, bits_sh, pushed_out, orig_val);
 
-    if(prod == 0){
-        set_flag_bit(&cpu->regs.flags, FLAG_ZERO, SET_TRUE);
-    }
-    else{
-        set_flag_bit(&cpu->regs.flags,FLAG_ZERO,SET_FALSE);
-    }
-    if((int16_t)prod<0){
-        set_flag_bit(&cpu->regs.flags,FLAG_SIGN,SET_TRUE);
-    }
-    else{
-        set_flag_bit(&cpu->regs.flags,FLAG_SIGN,SET_FALSE);
-    }
-    if(pushed_out == 1){
-        set_flag_bit(&cpu->regs.flags, FLAG_CARRY,SET_TRUE);
-    }
-    else{
-        set_flag_bit(&cpu->regs.flags,FLAG_CARRY,SET_FALSE);
-    }
-    if(bits_sh == 1){
-        //if a 1 bit shift, sets overflow flag to the prior MSB
-        set_flag_bit(&cpu->regs.flags, FLAG_OVERFLOW, cpu->regs.r[instr.dest]>>15);
-    }
     cpu->regs.r[instr.dest] = prod;
     return 0;
 
@@ -247,10 +228,40 @@ int op_shl(cpu_t *cpu, instr_t instr){
 
 int op_shr(cpu_t *cpu, instr_t instr){
     uint16_t prod = cpu->regs.r[instr.dest];
+    uint16_t orig_val = prod;
     uint16_t bits_sh = instr.src_fl;
     uint16_t pushed_out = ((prod << (16-bits_sh)) >> 15) & 0b0000000000000001; //yikers
-
+    prod >>= bits_sh;
+    update_flags_bitshift(&cpu->regs.flags, prod, bits_sh, pushed_out, orig_val);
 
     cpu->regs.r[instr.dest] = prod;
+    return 0;
+}
+
+int op_load(cpu_t *cpu, instr_t instr){
+    cpu->regs.r[instr.dest] = cpu->ram[cpu->regs.r[instr.src_fl]];
+    return 0;
+}
+
+int op_stor(cpu_t *cpu, instr_t instr){
+    cpu->ram[cpu->regs.r[instr.dest]] = cpu->regs.r[instr.src_fl];
+    return 0;
+}
+
+int op_comp(cpu_t *cpu, instr_t instr){
+    uint16_t dif;
+    uint16_t a = cpu->regs.r[instr.dest];
+    uint16_t b;
+    switch(instr.mode){
+        case REG:
+            b = cpu->regs.r[instr.src_fl];
+        case IMM4:
+            b = instr.src_fl;
+        default:
+            printf("No valid mode given in op_comp: 0x%x\n",instr.mode);
+            return 1;
+    }
+    dif = a - b;
+    update_flags_sub(&cpu->regs.flags, (int16_t)dif, (int16_t)a, (int16_t)b);
     return 0;
 }

@@ -90,3 +90,20 @@ int update_flags_and(uint16_t *flag, int16_t prod, int16_t a, int16_t b){
     set_flag_bit(flag,FLAG_OVERFLOW, SET_FALSE);
     return 0;
 }
+
+int update_flags_bitshift(uint16_t *flag, uint16_t prod, uint16_t bits_sh, uint16_t pushed_out, uint16_t orig_val){
+    if(prod == 0){
+        set_flag_bit(flag, FLAG_ZERO, SET_TRUE);
+    }
+    else{
+        set_flag_bit(flag,FLAG_ZERO,SET_FALSE);
+    }
+    if(bits_sh == 1){
+        //if a 1 bit shift, sets overflow flag to the prior MSB
+        set_flag_bit(flag, FLAG_OVERFLOW, orig_val>>15);
+    }
+    //sets sign bit to MSB
+    set_flag_bit(flag, FLAG_SIGN, prod>>15);
+    set_flag_bit(flag, FLAG_CARRY, pushed_out);
+    return 0;
+}
