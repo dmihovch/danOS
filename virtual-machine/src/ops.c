@@ -56,15 +56,17 @@ int op_add(cpu_t * cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             b = cpu->regs.r[instr.src_fl];
-        case IMM4:
+            break;
+            case IMM4:
             b = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_add: 0x%x\n",instr.mode);
             return 1;
     }
 
-    update_flags_add(&cpu->regs.flags,(int16_t)sum, (int16_t)a, (int16_t)b);
     sum = a + b;
+    update_flags_add(&cpu->regs.flags,(int16_t)sum, (int16_t)a, (int16_t)b);
     cpu->regs.r[instr.dest] = sum;
     return 0;
 }
@@ -77,14 +79,17 @@ int op_sub(cpu_t * cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             b = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             b = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_sub: 0x%x\n",instr.mode);
             return 1;
     }
-    update_flags_sub(&cpu->regs.flags, (int16_t)dif, (int16_t)a, (int16_t)b);
+
     dif = a - b;
+    update_flags_sub(&cpu->regs.flags, (int16_t)dif, (int16_t)a, (int16_t)b);
     cpu->regs.r[instr.dest] = dif;
     return 0;
 }
@@ -97,8 +102,10 @@ int op_mul(cpu_t * cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             b = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             b = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_mul: 0x%x\n",instr.mode);
             return 1;
@@ -118,8 +125,10 @@ int op_div(cpu_t * cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             divisor = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             divisor = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_div: 0x%x\n", instr.mode);
             return 1;
@@ -139,14 +148,17 @@ int op_and(cpu_t *cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             src = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             src = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_and: 0x%x\n",instr.mode);
             return 1;
     }
-    update_flags_logic(&cpu->regs.flags, (int16_t)prod, (int16_t)dest, (int16_t)src);
+
     prod = dest & src;
+    update_flags_logic(&cpu->regs.flags, (int16_t)prod);
     cpu->regs.r[instr.dest] = prod;
     return 0;
 }
@@ -159,14 +171,17 @@ int op_or(cpu_t * cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             src = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             src = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_or: 0x%x\n", instr.mode);
             return 1;
     }
-    update_flags_logic(&cpu->regs.flags, (int16_t)prod, (int16_t)dest, (int16_t)src);
+
     prod = dest | src;
+    update_flags_logic(&cpu->regs.flags, (int16_t)prod);
     cpu->regs.r[instr.dest] = prod;
     return 0;
 }
@@ -179,14 +194,17 @@ int op_xor(cpu_t *cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             src = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             src = (uint16_t)instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_xor: 0x%x\n",instr.mode);
             return 1;
     }
-    update_flags_logic(&cpu->regs.flags, (int16_t)prod, (int16_t)dest, (int16_t)src);
+
     prod = dest ^ src;
+    update_flags_logic(&cpu->regs.flags, (int16_t)prod);
     cpu->regs.r[instr.dest] = prod;
     return 0;
 }
@@ -255,8 +273,10 @@ int op_comp(cpu_t *cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             b = cpu->regs.r[instr.src_fl];
+            break;
         case IMM4:
             b = instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_comp: 0x%x\n",instr.mode);
             return 1;
@@ -272,10 +292,13 @@ int op_jump(cpu_t *cpu, instr_t instr){
     switch(instr.mode){
         case REG:
             offset = cpu->regs.r[instr.dest];
+            break;
         case MEM:
             offset = cpu->ram[cpu->regs.r[instr.dest]];
+            break;
         case LABEL:
             offset =(instr.dest << 8) + instr.src_fl;
+            break;
         default:
             printf("No valid mode given in op_jump: 0x%x\n",instr.mode);
             return 1;

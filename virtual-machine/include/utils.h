@@ -9,6 +9,6 @@
 int set_flag_bit(uint16_t*, int ,int);
 int update_flags_add(uint16_t*, int16_t, int16_t, int16_t);
 int update_flags_sub(uint16_t*, int16_t, int16_t, int16_t);
-int update_flags_logic(uint16_t*, int16_t, int16_t, int16_t);
+int update_flags_logic(uint16_t*, int16_t);
 int update_flags_bitshift(uint16_t*, uint16_t, uint16_t, uint16_t,uint16_t);
 int check_flag(uint16_t, uint16_t);

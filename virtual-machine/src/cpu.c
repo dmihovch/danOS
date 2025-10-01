@@ -35,21 +35,17 @@ int load_program(cpu_t* cpu, uint8_t* program, int plen){
 
 
 
-uint16_t fetch_instruction(uint8_t* ram, uint16_t* pc){
+uint16_t fetch_instruction(cpu_t* cpu){
 
-    if(ram == NULL || pc == NULL){
-        //needs to crash
-        printf("ram or pc null in fetch_instruction");
-        exit(1);
-    }
 
     uint16_t raw_instr;
-    raw_instr = ram[*pc];
-    (*pc)++;
+    raw_instr = cpu->ram[cpu->regs.pc];
+    cpu->regs.pc++;
 
     raw_instr <<= 8;
-    raw_instr |= ram[*pc];
-    (*pc)++;
+    raw_instr |= cpu->ram[cpu->regs.pc];
+
+    cpu->regs.pc++;
 
     return raw_instr;
 }
@@ -130,7 +126,7 @@ int execute_instruction(cpu_t* cpu, instr_t instr){
 }
 
 void print_regs(cpu_t *cpu){
-    for(int i = 0; i<15; i++){
+    for(int i = 0; i<16; i++){
         printf("R%d: %d\n",i,cpu->regs.r[i]);
     }
 
