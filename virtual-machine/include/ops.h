@@ -2,10 +2,10 @@
 #include "utils.h"
 
 
-#define REG 0x00
-#define IMM4 0x01
-#define MEM 0x10
-#define LABEL 0x01
+#define REG 0b00
+#define IMM4 0b01
+#define MEM 0b10
+#define LABEL 0b01
 
 int op_mov(cpu_t*, instr_t);
 int op_ldi(cpu_t*, instr_t);

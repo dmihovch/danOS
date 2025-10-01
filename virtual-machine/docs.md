@@ -1,8 +1,7 @@
 # 16-bit Toy VM Instruction Set Architecture (ISA)
 
 This document describes the instruction set for a 16-bit toy VM using **6-bit opcodes**.
-All instructions are **16 bits (2 bytes)**; there are **no extension words**.
-Large values must be loaded into registers first before use in operations.
+Instructions are 16 bit (2 byte), with the exception of LDI, which consumes an extra word (2 bytes) at invocation
 
 ---
 
@@ -46,7 +45,7 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 | 3   | O    | Overflow flag (signed overflow) |
 | 4–7 | —    | Reserved |
 
-> Arithmetic, logic, and comparison instructions automatically update FLAGS.
+> Arithmetic, logic, comparison, bitwise instructions automatically update FLAGS.
 
 ---
 
@@ -70,7 +69,7 @@ Bits 3–0   : Source register / small immediate (4 bits) / flags
 | 0x0D   | LOAD             | reg–mem          | Load from memory |
 | 0x0E   | STOR             | mem–reg          | Store to memory |
 | 0x0F   | COMP            | reg–reg / reg–imm4 | Compare and set FLAGS |
-| 0x10   | JUMP            | reg–mem          | Unconditional jump (PC = addr in reg or memory) |
+| 0x10   | JUMP            | reg–mem          | Unconditional jump (PC = addr in reg or memory + psa) |
 | 0x11   | JZ             | reg–mem          | Jump if zero flag set |
 | 0x12   | JNZ            | reg–mem          | Jump if zero flag clear |
 | 0x13   | JG             | reg–mem          | Jump if greater (S=0 & Z=0) |
