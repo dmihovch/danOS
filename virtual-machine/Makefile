@@ -1,6 +1,6 @@
 
 all:
-	gcc -o danos main.c src/memory.c src/debug.c src/cpu.c
+	gcc -o danos main.c src/memory.c src/debug.c src/cpu.c src/utils.c src/ops.c
 
 clean: danos
 	rm danos

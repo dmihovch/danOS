@@ -128,3 +128,10 @@ int execute_instruction(cpu_t* cpu, instr_t instr){
 
     return 0;
 }
+
+void print_regs(cpu_t *cpu){
+    for(int i = 0; i<15; i++){
+        printf("R%d: %d\n",i,cpu->regs.r[i]);
+    }
+
+}

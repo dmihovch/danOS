@@ -2,24 +2,30 @@
 
 int main(int argc, char** argv){
 
-    //this is now out of date, need to change into our new ISA format
-    uint8_t program[] = {0x91,0x92,0x93,0xA4,0xD5,0xF6,0x27,0x38,0x49,0x11,0x22,0x33};
 
+    uint8_t program[] = {
+    0x0B, 0x10, 0x00, 0x0A, // LDI R1, 10
+    0x0B, 0x20, 0x00, 0x14, // LDI R2, 20
+    0x3C, 0x12,             // COMP R1, R2
+    0x0B, 0x40, 0x00, 0x12, // LDI R4, 18 (address of 'less' label)
+    0x52, 0x40,             // JL R4
+    0x04, 0x31,             // MOV R3, R1
+    0x0B, 0x40, 0x00, 0x16, // LDI R4, 22 (address of 'end' label)
+    0x42, 0x40,             // JUMP R4
+    0x04, 0x32,             // less: MOV R3, R2
+    0x64, 0x00              // end: HALT
+    };
     cpu_t* cpu = init_cpu();
     if(cpu == NULL){
         return 1;
     }
     store(cpu->ram, 0xFFFF, 0xFA);
 
-    load_program(cpu, program, 12);
+    load_program(cpu, program, 28);
     print_memory_slice(cpu->ram, PROGRAM_CODE_START_ADDR, 32);
     printf("%d\n",cpu->regs.pc);
 
 
-    for(int i = 0; i<6; i++){
-        instr_t instr = format_instruction(fetch_instruction(cpu->ram, &cpu->regs.pc));
-        printf("0x%x, 0x%x\n", (instr.opcode<<2) | instr.mode, (instr.dest<<4) | instr.src_fl);
-    }
 
     int ret_code = 0;
     while(!ret_code){
@@ -29,6 +35,7 @@ int main(int argc, char** argv){
 
     }
 
+    print_regs(cpu);
     printf("\n%d\n",cpu->regs.pc);
     free(cpu);
 
