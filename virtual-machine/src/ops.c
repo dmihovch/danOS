@@ -28,13 +28,13 @@ int op_ldi(cpu_t * cpu, instr_t instr){
     uint8_t low_byte;
     uint16_t imm;
 
-    high_byte = cpu->ram[cpu->regs.pc];
+    low_byte = cpu->ram[cpu->regs.pc];
     cpu->regs.pc++;
     if(cpu->regs.pc > PROGRAM_CODE_END_ADDR){
         printf("broke through program code space in ldi\n");
         return 1;
     }
-    low_byte = cpu->ram[cpu->regs.pc];
+    high_byte = cpu->ram[cpu->regs.pc];
     cpu->regs.pc++;
     if(cpu->regs.pc > PROGRAM_CODE_END_ADDR){
         printf("broke through program code space in ldi\n");
@@ -257,12 +257,13 @@ int op_shr(cpu_t *cpu, instr_t instr){
 }
 
 int op_load(cpu_t *cpu, instr_t instr){
-    cpu->regs.r[instr.dest] = cpu->ram[cpu->regs.r[instr.src_fl]];
+    cpu->regs.r[instr.dest] = (uint16_t)cpu->ram[cpu->regs.r[instr.src_fl]] | ((uint16_t)cpu->ram[cpu->regs.r[instr.src_fl]] << 8);
     return 0;
 }
 
 int op_stor(cpu_t *cpu, instr_t instr){
     cpu->ram[cpu->regs.r[instr.dest]] = cpu->regs.r[instr.src_fl];
+    cpu->ram[cpu->regs.r[instr.dest]++] = cpu->regs.r[instr.src_fl] >> 8;
     return 0;
 }
 
@@ -294,16 +295,17 @@ int op_jump(cpu_t *cpu, instr_t instr){
             offset = cpu->regs.r[instr.dest];
             break;
         case MEM:
-            offset = cpu->ram[cpu->regs.r[instr.dest]];
+            offset = (uint16_t)cpu->ram[cpu->regs.r[instr.dest]] | ((uint16_t)cpu->ram[cpu->regs.r[instr.dest]++]<<8);
             break;
         case LABEL:
-            offset =(instr.dest << 8) + instr.src_fl;
+            //assembler will emit the correct jump statement based on offset
+            offset =(instr.dest << 8) + instr.src_fl ;
             break;
         default:
             printf("No valid mode given in op_jump: 0x%x\n",instr.mode);
             return 1;
     }
-    addr = cpu->regs.psa + offset;
+    addr = cpu->regs.pc + offset;
     if(addr>PROGRAM_CODE_END_ADDR){
         printf("op_jump caused program counter to pass program code space: 0x%x\n",addr);
         return 1;
@@ -345,8 +347,9 @@ int op_jz(cpu_t *cpu, instr_t instr){
 }
 
 int op_push(cpu_t *cpu, instr_t instr){
-    cpu->regs.sp -= 1;
+    cpu->regs.sp -= 2;
     cpu->ram[cpu->regs.sp] = cpu->regs.r[instr.dest];
+    cpu->ram[cpu->regs.sp-1] = cpu->regs.r[instr.dest] >> 8;
     if(cpu->regs.sp < STACK_END_ADDR){
         printf("stack overflowed\n");
         return 1;
@@ -355,7 +358,7 @@ int op_push(cpu_t *cpu, instr_t instr){
 }
 
 int op_pop(cpu_t *cpu, instr_t instr){
-    cpu->regs.r[instr.dest] = cpu->ram[cpu->regs.sp];
+    cpu->regs.r[instr.dest] = (uint16_t)cpu->ram[cpu->regs.sp] | (uint16_t)cpu->ram[cpu->regs.sp+1]<<8;
     cpu->regs.sp += 1;
     if(cpu->regs.sp > STACK_START_ADDR){
         printf("stack underflowed\n");
@@ -365,8 +368,9 @@ int op_pop(cpu_t *cpu, instr_t instr){
 }
 
 int op_call(cpu_t *cpu, instr_t instr){
-    cpu->regs.sp -= 1;
+    cpu->regs.sp -= 2;
     cpu->ram[cpu->regs.sp] = cpu->regs.pc;
+    cpu->ram[cpu->regs.sp+1] = cpu->regs.pc >> 8;
     if(cpu->regs.sp < STACK_END_ADDR){
         printf("stack underflowed in op_call\n");
         return 1;
@@ -375,8 +379,8 @@ int op_call(cpu_t *cpu, instr_t instr){
 }
 
 int op_ret(cpu_t *cpu, instr_t instr){
-    cpu->regs.pc = cpu->ram[cpu->regs.sp];
-    cpu->regs.sp += 1;
+    cpu->regs.pc = ((uint16_t)cpu->ram[cpu->regs.sp] << 8) | (uint16_t)cpu->ram[cpu->regs.sp-1];
+    cpu->regs.sp += 2;
     if(cpu->regs.sp > STACK_START_ADDR){
         printf("stack underflowed in op_ret\n");
         return 1;

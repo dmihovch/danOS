@@ -18,7 +18,6 @@ int load_program(cpu_t* cpu, uint8_t* program, int plen){
 
 
     uint16_t pc_val = cpu->regs.pc;
-    cpu->regs.psa = pc_val;
     //purposely not mutating the value @pc
     for(int i = 0; i<plen; i++){
         cpu->ram[pc_val] = program[i];
@@ -42,8 +41,7 @@ uint16_t fetch_instruction(cpu_t* cpu){
     raw_instr = cpu->ram[cpu->regs.pc];
     cpu->regs.pc++;
 
-    raw_instr <<= 8;
-    raw_instr |= cpu->ram[cpu->regs.pc];
+    raw_instr |= (uint16_t)cpu->ram[cpu->regs.pc] << 8;
 
     cpu->regs.pc++;
 

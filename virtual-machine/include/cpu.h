@@ -18,7 +18,6 @@
  * uint16_t sp: stack pointer
  * uint16_t sfp: stack frame pointer
  * uint16_t flags: conditional flags
- * uint16_t psa: program start address
  *
  *
  */
@@ -28,7 +27,6 @@ typedef struct registers_t {
     uint16_t sp;
     uint16_t sfp;
     uint16_t flags;
-    uint16_t psa;
 } registers_t;
 
 /*
