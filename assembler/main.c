@@ -1,5 +1,6 @@
 #include <stdio.h>
-
+#include "include/input.h"
+#include "include/debug.h"
 int main(int argc, char** argv){
 
     if(argc <= 1) {
@@ -7,13 +8,15 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    FILE* input = fopen(argv[1],"r");
-    if(input == NULL){
-        perror("error opening file\n");
+    int size;
+    char** tokens = tokenize_file(argv[1], &size);
+    if(tokens == NULL){
         return 1;
     }
 
+    print_tokens(tokens, size);
 
+    free_tokens(tokens, size);
 
 
     return 0;
