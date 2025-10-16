@@ -1,4 +1,4 @@
-danos
 *.o
-out.txt
 assembler/asm
+virtual-machine/danos
+.DS_Store
