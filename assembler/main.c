@@ -8,15 +8,17 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    int size;
-    char** tokens = tokenize_file(argv[1], &size);
-    if(tokens == NULL){
+    tokens_t* t = tokenize_file(argv[1]);
+    if(t == NULL){
         return 1;
     }
 
-    print_tokens(tokens, size);
 
-    free_tokens(tokens, size);
+
+
+    print_tokens(t);
+
+    free_tokens(t);
 
 
     return 0;

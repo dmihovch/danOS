@@ -4,7 +4,9 @@
 #include <stdio.h>
 
 
-char** tokenize_file(char* fn, int* szp){
+tokens_t* tokenize_file(char* fn){
+
+
 
     const char* delims = ";, \t\n";
 
@@ -19,32 +21,29 @@ char** tokenize_file(char* fn, int* szp){
         return NULL;
     }
 
-    char** tokens = NULL;
-    int count = 0;
-
+    tokens_t* t = calloc(1,sizeof(tokens_t));
     char* tok = strtok(buf, delims);
     while(tok){
-        char** tmp = realloc(tokens,(count+1)*(sizeof(char*)));
+        char** tmp = realloc(t->tokens,(t->size + 1)*(sizeof(char*)));
         if(tmp == NULL){
             free(buf);
-            if(tokens != NULL){
-                free_tokens(tokens,count);
+            if(t->tokens != NULL){
+                free_tokens(t);
             }
             return NULL;
         }
-        tokens = tmp;
-        tokens[count] = strdup(tok);
-        if(tokens[count] == NULL){
-           free_tokens(tokens, count);
+        t->tokens = tmp;
+        t->tokens[t->size] = strdup(tok);
+        if(t->tokens[t->size] == NULL){
+           free_tokens(t);
            free(buf);
         }
-        count++;
+        t->size++;
         tok = strtok(NULL, delims);
     }
 
-    *szp = count;
 
-    return tokens;
+    return t;
 }
 
 char* create_file_buffer(FILE* fp){
@@ -61,11 +60,4 @@ char* create_file_buffer(FILE* fp){
 
 
     return buf;
-}
-
-void free_tokens(char ** tokens, int idx){
-    for(int i = 0; i<idx; i++){
-        free(tokens[i]);
-    }
-    free(tokens);
 }
