@@ -24,7 +24,7 @@ tokens_t* tokenize_file(char* fn){
     tokens_t* t = calloc(1,sizeof(tokens_t));
     char* tok = strtok(buf, delims);
     while(tok){
-        char** tmp = realloc(t->tokens,(t->size + 1)*(sizeof(char*)));
+        char** tmp = realloc(t->tokens,(t->size+ 1)*(sizeof(char*)));
         if(tmp == NULL){
             free(buf);
             if(t->tokens != NULL){
