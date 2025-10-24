@@ -28,14 +28,14 @@ tokens_t* tokenize_file(char* fn){
         if(tmp == NULL){
             free(buf);
             if(t->tokens != NULL){
-                free_tokens(t);
+                tokens_free(t);
             }
             return NULL;
         }
         t->tokens = tmp;
         t->tokens[t->size] = strdup(tok);
         if(t->tokens[t->size] == NULL){
-           free_tokens(t);
+           tokens_free(t);
            free(buf);
         }
         t->size++;

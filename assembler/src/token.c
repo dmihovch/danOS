@@ -1,7 +1,7 @@
 #include "../include/token.h"
 
 
-void free_tokens(tokens_t* t){
+void tokens_free(tokens_t* t){
     for(int i = 0; i<t->size; i++){
         free(t->tokens[i]);
     }

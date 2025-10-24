@@ -7,5 +7,5 @@ typedef struct {
     int size;
 } tokens_t;
 
-void free_tokens(tokens_t*);
+void tokens_free(tokens_t*);
 void print_tokens(tokens_t*);

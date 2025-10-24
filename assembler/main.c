@@ -21,7 +21,7 @@ int main(int argc, char** argv){
 
     print_tokens(t);
 
-    free_tokens(t);
+    tokens_free(t);
 
 
     return 0;
