@@ -1,7 +1,5 @@
 #include "../include/input.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+
 
 
 tokens_t* tokenize_file(char* fn){

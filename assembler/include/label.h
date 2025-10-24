@@ -1,4 +1,4 @@
-
+#include <stdlib.h>
 
 typedef struct {
     char* name;
@@ -12,7 +12,7 @@ typedef struct {
     int cap;
 } label_table_t;
 
-void tokens_free(label_table_t*);
+void label_table_free(label_table_t*);
 label_table_t* label_table_init(int);
 int add_label(label_table_t*, char*, int);
 int label_table_resize(label_table_t*);

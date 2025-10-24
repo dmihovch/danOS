@@ -1,6 +1,6 @@
 
 #include "../include/label.h"
-#include <stdlib.h>
+
 
 
 label_table_t* label_table_init(int init_cap){
