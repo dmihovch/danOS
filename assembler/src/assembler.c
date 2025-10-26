@@ -1,5 +1,5 @@
 #include "../include/assembler.h"
-int asm_first_pass(tokens_t* t, label_table_t* lt){
+int asm_first_pass(tokens_t* t, label_table_t* lt, asm_prog_t* ap){
 
 
 
