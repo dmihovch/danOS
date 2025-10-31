@@ -1,7 +1,10 @@
 #pragma once
 #include "label.h"
 #include "token.h"
+#include "encode.h"
+#include <string.h>
 #include <stdint.h>
+#define NUM_OPCODE 26
 
 typedef struct {
 
