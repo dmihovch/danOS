@@ -5,11 +5,11 @@
 
 label_table_t* label_table_init(int init_cap){
 
-    label_table_t* lt = calloc(1,sizeof(label_table_t*));
+    label_table_t* lt = calloc(1,sizeof(label_table_t));
     if(lt == NULL){
         return NULL;
     }
-    lt->labels = calloc(init_cap, sizeof(label_t*));
+    lt->labels = calloc(init_cap, sizeof(label_t));
     if(lt->labels == NULL){
         free(lt);
         return NULL;
