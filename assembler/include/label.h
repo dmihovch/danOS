@@ -1,4 +1,7 @@
+
+#pragma once
 #include <stdlib.h>
+
 
 typedef struct {
     char* name;

@@ -1,3 +1,4 @@
+#pragma once
 #include "memory.h"
 #include "debug.h"
 #define GENERAL_REGISTER_COUNT 16
