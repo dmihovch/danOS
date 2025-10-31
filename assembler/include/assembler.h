@@ -1,3 +1,4 @@
+#pragma once
 #include "label.h"
 #include "token.h"
 #include <stdint.h>

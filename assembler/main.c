@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "include/input.h"
-#include "include/debug.h"
 #include "include/assembler.h"
 int main(int argc, char** argv){
 
