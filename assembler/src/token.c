@@ -22,3 +22,10 @@ void print_tokens(tokens_t* t){
     }
 
 }
+
+void tok_lowercase(char* tok){
+       while(*tok){
+           *tok = tolower(*tok);
+           tok++;
+       }
+}
