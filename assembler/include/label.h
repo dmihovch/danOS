@@ -5,7 +5,7 @@
 
 typedef struct {
     char* name;
-    int addr;
+    int pc_off;
 } label_t;
 
 

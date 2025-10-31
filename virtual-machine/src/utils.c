@@ -1,5 +1,4 @@
 #include "../include/utils.h"
-#include "../include/ops.h"
 
 int set_flag_bit(uint16_t* reg, int flag, int val){
     if(val == SET_TRUE){
