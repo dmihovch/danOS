@@ -1,0 +1,6 @@
+for the second pass, when we are trying to figure out what is expected next. We have a
+variable with an enum that has stuff like REGISTER, ADDRESS, OPCODE/LABEL, etc, and have an
+'expected' variable, and update it based on what we know. also have a previous_opcode variable.
+
+
+wait. I can always pretty easily figure out if it is legal or expected. Just based on the type of opcode

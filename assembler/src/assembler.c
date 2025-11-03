@@ -37,19 +37,34 @@ int asm_first_pass(tokens_t* t, label_table_t* lt, asm_prog_t* ap){
         {"halt", 2, 0,0,0}
     };
 
-    int i, j, tok_opcode, tok_directive, tok_label;
+    int i, j, tok_opcode, tok_directive, tok_label, found, tok_len;
     char* tok;
     int tsz = t->size;
     for(i = 0; i<tsz; i++){
+        found = 0;
+
         tok = t->tokens[i];
+        tok_len = strlen(tok);
+
+        if(tok[tok_len-1] == ':'){
+
+        }
+
 
 
         for(j = 0; j<NUM_OPCODE; j++){
             if(!strcmp(opcodes[j].op_name, tok)){
                 ap->pc += opcodes[j].bytes;
+                found = 1;
                 break;
             }
         }
+        if(found){
+            continue;
+        }
+
+
+
 
 
 
