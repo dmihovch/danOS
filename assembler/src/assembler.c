@@ -1,12 +1,13 @@
 #include "../include/assembler.h"
+#include <string.h>
 
 
-asm_prog_t* asm_prog_init(){
+program_t* program_init(){
    return NULL;
 }
 
 
-int asm_first_pass(tokens_t* t, label_table_t* lt, asm_prog_t* ap){
+int asm_first_pass(tokens_t* t, label_table_t* lt, program_t* p){
     //reg, imm, mem
     opcode_def_t opcodes[NUM_OPCODE] = {
         {"nop", 2, 0, 0, 0},
@@ -47,11 +48,19 @@ int asm_first_pass(tokens_t* t, label_table_t* lt, asm_prog_t* ap){
         tok_len = strlen(tok);
 
         //directive
-        if(tok[0] == '.' && tok[tok_len-1]!=':'){
-
+        if(!strcmp(".data", tok)){
+            p->sec = DATA;
             found = 1;
         }
-        //directive
+        if(!strcmp(".bss", tok)){
+            p->sec = BSS;
+            found = 1;
+        }
+        if(!strcmp(".text",tok)){
+            p->sec = TEXT;
+            found = 1;
+        }
+        //label
         if(tok[tok_len-1] == ':'){
             found = 1;
         }
@@ -62,9 +71,10 @@ int asm_first_pass(tokens_t* t, label_table_t* lt, asm_prog_t* ap){
 
 
         //opcode
+
         for(j = 0; j<NUM_OPCODE; j++){
             if(!strcmp(opcodes[j].op_name, tok)){
-                ap->pc += opcodes[j].bytes;
+                p->text_pc += opcodes[j].bytes;
                 found = 1;
                 break;
             }
