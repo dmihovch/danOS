@@ -46,12 +46,22 @@ int asm_first_pass(tokens_t* t, label_table_t* lt, asm_prog_t* ap){
         tok = t->tokens[i];
         tok_len = strlen(tok);
 
-        if(tok[tok_len-1] == ':'){
+        //directive
+        if(tok[0] == '.' && tok[tok_len-1]!=':'){
 
+            found = 1;
+        }
+        //directive
+        if(tok[tok_len-1] == ':'){
+            found = 1;
+        }
+
+        if(found){
+            continue;
         }
 
 
-
+        //opcode
         for(j = 0; j<NUM_OPCODE; j++){
             if(!strcmp(opcodes[j].op_name, tok)){
                 ap->pc += opcodes[j].bytes;
